@@ -1,0 +1,55 @@
+{
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+
+    // Enforce strict equality === and !==
+    "eqeqeq": ["error", "always"],
+
+    // Indentation rule (2 spaces by default, but can adjust to your preference)
+    "indent": ["error", 2, {
+      "SwitchCase": 1
+    }],
+
+    // Prevent unnecessary empty lines
+    "no-multiple-empty-lines": ["error", {
+      "max": 1,   // Max 1 empty line
+      "maxEOF": 0, // No empty line at end of file
+      "maxBOF": 0  // No empty line at beginning of file
+    }],
+
+    // Disallow trailing spaces at the end of a line
+    "no-trailing-spaces": "error",
+
+    // Enforce maximum line length (optional, if not already included)
+    "max-len": [
+      "error",
+      {
+        "code": 90,
+        "tabWidth": 2,
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ]
+  }
+}

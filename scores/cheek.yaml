@@ -1,0 +1,25 @@
+---
+name: Cheek to Cheek
+key: C
+length: 0.5
+envelope: drop
+harmonic: stringed
+volume: 500
+sections: [
+  {
+    C1: [a3-f4-a4, g3-e4-g4, b3, 0.5:c4-e4-g4, 0.5:b3],
+    C2: [2:c2-c3, 2:g2],
+  },
+  {
+    C1: [a3, c4-f4-g4, e3-c4-e4, f3-d4-f4],
+    C2: [2:d2-c2, 2:g2],
+  },
+  {
+    C1: [a3-f4-a4, g3-e4-g4, b3, 0.5:c4-e4-g4, 0.5:b3],
+    C2: [2:c2-c3, 2:g2],
+  },
+  {
+    C1: [a3, c4-f4-g4, e3-c4-e4, f3-d4-f4],
+    C2: [2:d2-c2, 2:g2],
+  },
+]

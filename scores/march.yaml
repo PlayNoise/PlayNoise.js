@@ -1,0 +1,20 @@
+---
+name: Turkish March
+key: C
+length: 0.125
+envelope: drop
+harmonic: stringed
+volume: 500
+sections: [
+  { C1: [b4, a4, g4#, a4],
+    C2: [b4, a4, g4#, a4] },
+
+  { C1: [2:c5, 2:z,     d5, c5,  b4, c5],
+    C2: [2:a3, 2:c4-e4, 2:c4-e4, 2:c4-e4]},
+
+  { C1: [],
+    C2: []},
+
+  { C1: [],
+    C2: []},        
+]

@@ -19,6 +19,7 @@ export function first(input) {
   return Math.sin(base(input));
 }
 
+
 // Second harmonic: adds the second harmonic (double the base frequency)
 export function second(input) {
   return Math.sin(base(input)) + Math.sin(base(input) * 2);

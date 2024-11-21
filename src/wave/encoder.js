@@ -1,5 +1,5 @@
-import { rest, noteData, concat, frequency, inKey, inNote } from './utils.js';
-
+import { rest, noteData, concat, frequency, inKey, inNote, voiceData ,getInputInstrument } from './utils.js';
+import { EnvelopeAHDSR } from './utils.js';
 // Define pitch and keys globally
 let pitch = {};
 let tuneKey = {};
@@ -23,7 +23,25 @@ class Note {
     //console.log(`Created Note - Pitch: ${this.pitch}, Accidental: ${this.accidental}, Length: ${this.length}, Volume: ${this.vol}`);
   }
 
-  encode() {
+  encodeVoice() {
+    if (this.pitch.length === 0) {
+      //console.log(`Rest note - Length: ${this.length}`);
+      return rest(this.length); // Handle rest
+    }
+
+    // Convert each pitch to its frequency and apply accidental adjustments
+    const noteDataArray = this.pitch.map((p, i) => {
+      const adjustedPitch = p + (this.accidental[i] || 0); // Apply accidental (sharp or flat)
+      //const frequencyValue = frequency(adjustedPitch);
+      const frequencyValue = adjustedPitch;
+
+      return voiceData(frequencyValue, this.length, this.vol, this.env);
+    });
+    return concatNotes(...noteDataArray); // Handle both single note and chord
+
+  }
+
+  encodeNote() {
     if (this.pitch.length === 0) {
       //console.log(`Rest note - Length: ${this.length}`);
       return rest(this.length); // Handle rest
@@ -71,19 +89,32 @@ class Tune {
 
     const ch1Data = [];
     const ch2Data = [];
-
+    const currentInputInstrument = getInputInstrument();
     for (let i = 0; i < this.ch1.length; i++) {
       const note = this.ch1[i];
       console.log(`Note ch1 ${JSON.stringify(note)}`);
 
-      const encoded = note.encode();
+      let encoded;
+      if (currentInputInstrument === 'note'){
+        encoded = note.encodeNote();
+      }
+      else{ 
+        encoded= note.encodeVoice();
+      }
       ch1Data.push(encoded);
     }
 
     for (let i = 0; i < this.ch2.length; i++) {
       const note = this.ch2[i];
       console.log(`Note ch2 ${JSON.stringify(note)}`);
-      const encoded = note.encode();
+
+      let encoded;
+      if (currentInputInstrument === 'note'){
+        encoded = note.encodeNote();
+      }
+      else{ 
+        encoded= note.encodeVoice();
+      }
       ch2Data.push(encoded);
     }
 

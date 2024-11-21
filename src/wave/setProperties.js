@@ -37,12 +37,12 @@ function setVolume(volume) {
  *
  * @example
  * // Set the harmonic function to 'first'
- * setHarmonic(first);
+ * PN.setHarmonic(first);
  * console.log(PN.harmonic);  // Logs: [function: first]
  */
 function setHarmonic(harmonicFunc) {
   PN.harmonic = harmonicFunc;
-  console.log('Harmonic function set');
+  console.log(`Harmonic function set ${harmonicFunc}`);
 }
 
 export { setDuration, setVolume, setHarmonic };

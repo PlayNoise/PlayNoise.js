@@ -1,4 +1,7 @@
 // utils.js
+import { EnvelopeAHDSR } from '../instruments/envelope.js';
+
+let instrument; 
 
 // Sample rate is assumed to be constant
 const sampleRate = 44100,
@@ -34,7 +37,6 @@ export function noteData(frequency, duration, envelope, harmonic, volume) {
   for (let i = 0.0; i < duration; i = i+ (1.0 / (sampleRate))) {
 
     const x = volume * envelope(i, duration) * harmonic(frequency * i) ;
-    //    const amplitude = envelope(time, duration) * harmonic(frequency * i) *volume;
 
     data.push(x);
   }
@@ -59,26 +61,6 @@ export function noteData2(frequency, duration, envelope, harmonic, volume) {
 
   return data;
 }
-
-function sineWaveAt(sampleNumber, tone) {
-  var sampleFreq = sampleRate / tone;
-  return Math.sin(sampleNumber / (sampleFreq / (Math.PI * 2)));
-}
-
-// Returns the note data based on frequency, duration, envelope, harmonic, and volume
-/*export function noteData(frequency, duration, envelope, harmonic, volume) {
-  const arr = [];
-
-  volume = 0.2;
-  const seconds = 0.5;
-  const tone = 441;
-
-  for (var i = 0; i < sampleRate * seconds; i++) {
-    arr[i] = sineWaveAt(i, tone) * volume
-  }
-  return arr;
-}
-*/
 
 // Check if the given note is in the key signature
 export function inKey(keys, note) {
@@ -111,4 +93,67 @@ export function calculateFrequency(note) {
   const [, noteName, octave] = parsedNote;
   const semitoneDistance = noteMap[noteName] + (parseInt(octave) - 4) * 12;
   return 440 * Math.pow(2, semitoneDistance / 12); // Frequency calculation
+}
+
+// Generate sample data with AHDSR envelope and multiple oscillators
+export function voiceData(frequency, duration, volume , oscillators, sampleRate = 44100) {
+  const data = [];
+  const totalSamples = Math.floor(sampleRate * duration);
+
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate; // Current time in seconds
+    const envelopeValue = EnvelopeAHDSR(time, duration); // Get envelope amplitude
+
+    // Combine contributions from all oscillators
+    let harmonicValue = 0;
+    oscillators.forEach(osc => {
+      const freq = frequency * (osc.k ? Math.pow(2, osc.k / 12) : 1); // Adjust for detuning
+      const waveValue = generateWaveValue(osc.w, freq, time); // Generate wave based on type
+      harmonicValue += osc.v * waveValue; // Scale by volume multiplier
+    });
+
+    const sample = volume * envelopeValue * harmonicValue; // Apply envelope to combined harmonic
+    data.push(sample);
+  }
+  console.log(`Generated Data : ${data}`);
+
+  return data;
+}
+
+// Generate wave value based on oscillator type
+function generateWaveValue(type, frequency, time) {
+  const phase = 2 * Math.PI * frequency * time;
+  switch (type) {
+    case 'sine':
+      return Math.sin(phase);
+    case 'triangle':
+      return 2 * Math.abs(2 * (time * frequency - Math.floor(time * frequency + 0.5))) - 1;
+    case 'square':
+      return Math.sign(Math.sin(phase));
+    case 'sawtooth':
+      return 2 * (time * frequency - Math.floor(time * frequency + 0.5));
+    case 'w9999':
+      // Custom wave: blend of sine and triangle
+      const sine = Math.sin(phase);
+      const triangle = 2 * Math.abs(2 * (time * frequency - Math.floor(time * frequency + 0.5))) - 1;
+      return 0.5 * sine + 0.5 * triangle; // 50/50 blend
+    case 'n0':
+      // Noise oscillator: random values between -1 and 1
+      return Math.random() * 2 - 1;
+    default:
+      return 0; // Default to no contribution if unknown wave type
+  }
+}
+
+
+export function setInputInstrument(newInstrument) {
+  instrument = newInstrument;
+}
+
+export function getInputInstrument() {
+  if (instrument === 'voice') {
+    return 'voice';
+  } else {
+    return 'note';
+  }
 }

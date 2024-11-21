@@ -121,24 +121,31 @@ export function tempered(input, duration) {
   return drop(input, duration) * drawl(input, duration);
 }
 
-export function ahdsr(input, duration, attack, hold, decay, sustainLevel, release) {
-  if (input < attack) {
-    // Attack phase: rise from 0 to 1
-    return Math.sin((Math.PI * input) / (2 * attack));
-  } else if (input < attack + hold) {
-    // Hold phase: maintain maximum amplitude
-    return 1;
-  } else if (input < attack + hold + decay) {
-    // Decay phase: fall from 1 to sustain level
-    return Math.cos((Math.PI * (input - (attack + hold)))
-     / (2 * decay)) * (1 - sustainLevel) + sustainLevel;
-  } else if (input < duration - release) {
-    // Sustain phase: maintain sustain level
-    return sustainLevel;
+// Example AHDSR envelope function
+export function EnvelopeAHDSR(time, duration) {
+  const attack = 0.1; // Attack time (seconds)
+  const hold = 0.05; // Hold time (seconds)
+  const decay = 0.2; // Decay time (seconds)
+  const sustainLevel = 0.7; // Sustain level
+  const release = 0.5; // Release time (seconds)
+
+  const attackEnd = attack;
+  const holdEnd = attack + hold;
+  const decayEnd = holdEnd + decay;
+  const releaseStart = duration - release;
+
+  if (time < attackEnd) {
+    return time / attack; // Linear attack
+  } else if (time < holdEnd) {
+    return 1; // Hold
+  } else if (time < decayEnd) {
+    return 1 - ((time - holdEnd) / decay) * (1 - sustainLevel); // Decay
+  } else if (time < releaseStart) {
+    return sustainLevel; // Sustain
+  } else if (time <= duration) {
+    return sustainLevel * (1 - (time - releaseStart) / release); // Release
   } else {
-    // Release phase: fall from sustain level to 0
-    return Math.cos((Math.PI * (input - (duration - release)))
-     / (2 * release)) * sustainLevel;
+    return 0; // Beyond duration
   }
 }
 

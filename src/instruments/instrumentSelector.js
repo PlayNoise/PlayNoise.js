@@ -34,7 +34,7 @@ function instrument(instrumentName) {
       console.log('Instrument not found!');
       return;
   }
-  console.log(`Selected instrument: ${instrumentName}`);
+  //console.log(`Selected instrument: ${instrumentName}`);
 }
 
 export {instrument};

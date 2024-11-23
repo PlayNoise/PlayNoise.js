@@ -328,7 +328,7 @@ export function synthPad(input, duration) {
 
 */
 
-export  function organ(input, duration) {
+export  function Organ(input, duration) {
   return Math.sin((2 * Math.PI * input) / duration) +
          0.5 * Math.sin((4 * Math.PI * input) / duration) +
          0.3 * Math.sin((8 * Math.PI * input) / duration);

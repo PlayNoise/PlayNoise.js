@@ -23,7 +23,7 @@ export class Instruments{
   }
 
   Organ(){
-    return organ;
+    return Organ;
   }
 
   Guitar(){

@@ -19,11 +19,11 @@ PlayNoise.js is a lightweight JavaScript library that enables music creation dir
 
 Add PlayNoise.js to your project via a `<script>` tag. 
 
-1. Download the `dist/index.js` file from the repository.
+1. Download the `dist/pn-library.js` file from the repository.
 2. Include it in your HTML:
 
    ```html
-   <script type="module" src="path/to/index.js"></script>
+   <script type="module" src="path/to/pn-library.js"></script>
    ```
 
 ---

@@ -35,35 +35,32 @@ Add PlayNoise.js to your project via a `<script>` tag.
 1. Include the library in your project:
 
    ```html
-   <script type="module">
-       import { parseYAML, generateWAV } from './dist/index.js';
+    <!-- Include the pn-library.js script -->
+    <script src="pn-library.js"></script>
 
-       // Define YAML data
-       const yamlData = `
-       tempo: 120
-       tracks:
-         - instrument: sine
-           notes:
-             - frequency: 440
-               duration: 1
-             - frequency: 660
-               duration: 1
-       `;
+    <script>
+        // Wrap everything in an async function
+        async function runPNExample() {
+            console.log(PN);  // This should print the PN object
 
-       // Parse the YAML
-       const score = parseYAML(yamlData);
+            PN.instrument('Piano'); // Select the instrument
+            // PN.setVolume(0.5); // Set volume (optional)
 
-       // Generate WAV data
-       const wavBuffer = generateWAV(score);
+            // Wait for PN.singVoice to complete
+            const song = await PN.singVoice('recording2.wav');
 
-       // Create a downloadable WAV file
-       const blob = new Blob([wavBuffer], { type: 'audio/wav' });
-       const link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = 'output.wav';
-       link.textContent = 'Download Generated Audio';
-       document.body.appendChild(link);
-   </script>
+            console.log("Song created:", song);
+            console.log(PN.volume);  // Logs the current volume
+                setTimeout(() => {
+                    PN.save(); // Call save after the delay
+
+                }, 8000); // Delay in milliseconds (5000ms = 5s)
+        }
+
+        // Run the function
+        runPNExample();
+
+    </script>
    ```
 
 2. Open the HTML file in your browser, and the WAV file will be generated and available for download.

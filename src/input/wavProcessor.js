@@ -86,7 +86,7 @@ function parseWav(buffer) {
  */
 function processAudioData(audioData, sampleRate) {
   let voiceFrequencies = new Map();
-  const chunkSize = 8; // Adjusted chunk size for more effective analysis
+  const chunkSize = 516; // Adjusted chunk size for more effective analysis
   const numChunks = Math.ceil(audioData.length / chunkSize);
 
   //console.log("Number of Chunks:", numChunks);

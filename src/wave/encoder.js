@@ -95,12 +95,7 @@ class Tune {
       console.log(`Note ch1 ${JSON.stringify(note)}`);
 
       let encoded;
-      if (currentInputInstrument === 'note'){
         encoded = note.encodeNote();
-      }
-      else{ 
-        encoded= note.encodeVoice();
-      }
       ch1Data.push(encoded);
     }
 
@@ -109,12 +104,7 @@ class Tune {
       console.log(`Note ch2 ${JSON.stringify(note)}`);
 
       let encoded;
-      if (currentInputInstrument === 'note'){
         encoded = note.encodeNote();
-      }
-      else{ 
-        encoded= note.encodeVoice();
-      }
       ch2Data.push(encoded);
     }
 

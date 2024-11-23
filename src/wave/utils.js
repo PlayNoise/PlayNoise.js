@@ -1,5 +1,4 @@
 // utils.js
-import { EnvelopeAHDSR } from '../instruments/envelope.js';
 
 let instrument; 
 
@@ -96,7 +95,7 @@ export function calculateFrequency(note) {
 }
 
 // Generate sample data with AHDSR envelope and multiple oscillators
-export function voiceData(frequency, duration, volume , oscillators, sampleRate = 44100) {
+export function voiceData2(frequency, duration, volume , oscillators, sampleRate = 44100) {
   const data = [];
   const totalSamples = Math.floor(sampleRate * duration);
 
@@ -115,34 +114,82 @@ export function voiceData(frequency, duration, volume , oscillators, sampleRate 
     const sample = volume * envelopeValue * harmonicValue; // Apply envelope to combined harmonic
     data.push(sample);
   }
-  console.log(`Generated Data : ${data}`);
-
   return data;
 }
 
 // Generate wave value based on oscillator type
+// Generate sample data with AHDSR envelope and multiple oscillators
+export function voiceData(frequency, duration, volume , oscillators, sampleRate = 44100) {
+    const data = [];
+    const totalSamples = Math.floor(sampleRate * duration);
+
+    for (let i = 0; i < totalSamples; i++) {
+        const time = i / sampleRate; // Current time in seconds
+
+        let sampleValue = 0;
+
+        // Iterate through oscillators and sum their contributions
+        oscillators.forEach(osc => {
+            const { w, t, v = 1, a = 0, d = 0, s = 1, r = 0, h = 0 } = osc;
+
+            // Apply ADSRH envelope for this oscillator
+            const envelopeValue = calculateDynamicADSR(time, duration, a, d, s, r, h);
+
+            // Generate wave value
+            const oscFrequency = frequency * (t || 1); // Calculate frequency with detuning
+            const waveValue = generateWaveValue(w, oscFrequency, time);
+
+            // Combine envelope and oscillator values
+            const scaledWaveValue = v * waveValue * envelopeValue;
+            sampleValue += scaledWaveValue;
+        });
+
+        data.push(sampleValue); // Store the generated sample
+    }
+
+    return data;
+}
+
+
+// Generate wave value based on oscillator type
 function generateWaveValue(type, frequency, time) {
-  const phase = 2 * Math.PI * frequency * time;
-  switch (type) {
-    case 'sine':
-      return Math.sin(phase);
-    case 'triangle':
-      return 2 * Math.abs(2 * (time * frequency - Math.floor(time * frequency + 0.5))) - 1;
-    case 'square':
-      return Math.sign(Math.sin(phase));
-    case 'sawtooth':
-      return 2 * (time * frequency - Math.floor(time * frequency + 0.5));
-    case 'w9999':
-      // Custom wave: blend of sine and triangle
-      const sine = Math.sin(phase);
-      const triangle = 2 * Math.abs(2 * (time * frequency - Math.floor(time * frequency + 0.5))) - 1;
-      return 0.5 * sine + 0.5 * triangle; // 50/50 blend
-    case 'n0':
-      // Noise oscillator: random values between -1 and 1
-      return Math.random() * 2 - 1;
-    default:
-      return 0; // Default to no contribution if unknown wave type
-  }
+    const phase = 2 * Math.PI * frequency * time;
+    switch (type) {
+        case "sine":
+            return Math.sin(phase);
+        case "triangle":
+            return 2 * Math.abs(2 * (time * frequency - Math.floor(time * frequency + 0.5))) - 1;
+        case "square":
+            return Math.sign(Math.sin(phase));
+        case "sawtooth":
+            return 2 * (time * frequency - Math.floor(time * frequency + 0.5));
+        case "n0": // White noise
+            return Math.random() * 2 - 1;
+        default:
+            return 0; // Default to no contribution if unknown wave type
+    }
+}
+
+// Calculate AHDSR envelope value
+function calculateDynamicADSR(time, duration, a, d, s, r, h) {
+    const attackEnd = a;
+    const holdEnd = a + h;
+    const decayEnd = holdEnd + d;
+    const releaseStart = duration - r;
+
+    if (time < attackEnd) {
+        return time / a; // Attack phase (linear ramp)
+    } else if (time < holdEnd) {
+        return 1; // Hold phase (constant at peak)
+    } else if (time < decayEnd) {
+        return 1 - ((time - holdEnd) / d) * (1 - s); // Decay phase
+    } else if (time < releaseStart) {
+        return s; // Sustain phase
+    } else if (time <= duration) {
+        return s * (1 - (time - releaseStart) / r); // Release phase
+    } else {
+        return 0; // Beyond duration
+    }
 }
 
 

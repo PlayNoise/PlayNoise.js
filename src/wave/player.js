@@ -5,6 +5,7 @@ import { Instruments } from '../instruments/instruments.js';
 import parseSongInput from '../input/parseStringInput.js';
 import pitchFrequencies from '../pitchFrequencies.json';
 import {readWavFile} from '../input/wavProcessor.js';
+import {yinReadWavFile} from '../input/yinWavProcessor.js'
 import {setInputInstrument} from './utils.js'
 
 /**
@@ -148,11 +149,40 @@ function convertToOctave(frequency, targetOctave) {
     return scaledFrequency;
 }
 
+/**
+ * Creates a musical note with the given note name.
+ * If no instrument is selected, it defaults to Piano.
+ *
+ * @param {string} noteName - The name of audio file you wish to replicate.
+ * @returns {File|undefined} - A new audio file instance with the specified pitch, or undefined if the note is not found.
+ *
+ * @example
+ * // Select an instrument and create a note
+ *      // Wrap everything in an async function
+ *      async function runPNExample() {
+ *          console.log(PN);  // This should print the PN object
+ *           PN.instrument('British'); // Select the instrument
+ *           // PN.setVolume(0.5); // Set volume (optional)
+ *
+ *           // Wait for PN.singVoice to complete
+ *           const song = await PN.singVoice('recording2.wav');
+ *
+ *           console.log("Song created:", song);
+ *           console.log(PN.volume);  // Logs the current volume
+ *               setTimeout(() => {
+ *                   PN.save(); // Call save after the delay
+ *                   saveLogToFile(logMessages);
+ *
+ *               }, 8000); // Delay in milliseconds (5000ms = 5s)
+ *       }
+ *
+ *       // Run the function
+ *       runPNExample();
+ */
+
 function singVoice(audioFile) {
-    setInputInstrument('voice');
 
   readWavFile(audioFile, (voiceFrequencies) => {
-        //console.log("Voice A : ", voiceFrequencies); // This will log after processing is complete
 
         const skeleton = voiceFrequencies; // Assign voiceFrequencies to skeleton
 
@@ -161,11 +191,6 @@ function singVoice(audioFile) {
             [],  // ch1: Will be filled with notes
             []   // ch2: Will be filled with notes
             );
-
-        //console.log(skeleton.length);
-//      [Math.round(data[0] * 1000)/1000],             // Frequency
-//                Math.round(data[2]/2 * 10000)/10000,            // Duration
-//                data[1]*2,      // Volume
 
         // Iterate over each entry in the `skeleton` Map
         skeleton.forEach((data, index) => {
@@ -178,12 +203,13 @@ function singVoice(audioFile) {
 
             const note = new Note(
 
-                [Math.round(frequency)],             // Frequency
+                //[Math.round(frequency)],             // Frequency
+                [data[0]],
                 [0],                 // No accidentals
                 data[2]/2,            // Duration
-                PN.currentInstrument, // Instrument envelope
+                PN.currentInstrument, // oscillators
                 PN.harmonic,         // Harmonic function
-                data[1]*4,      // Volume
+                data[1]/2,      // Volume
             );
             if (note) {
                 myTune.ch1.push(note);

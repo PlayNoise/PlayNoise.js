@@ -5,7 +5,6 @@ import { Instruments } from '../instruments/instruments.js';
 import parseSongInput from '../input/parseStringInput.js';
 import pitchFrequencies from '../pitchFrequencies.json';
 import {readWavFile} from '../input/wavProcessor.js';
-import {yinReadWavFile} from '../input/yinWavProcessor.js'
 import {setInputInstrument} from './utils.js'
 
 /**
@@ -204,7 +203,7 @@ function singVoice(audioFile) {
             const note = new Note(
 
                 //[Math.round(frequency)],             // Frequency
-                [data[0]],
+                [Math.round(frequency)],
                 [0],                 // No accidentals
                 data[2]/2,            // Duration
                 PN.currentInstrument, // oscillators

@@ -35,7 +35,7 @@ export class Instruments{
   }
 
   Violin(){
-    return Violin;
+    return violin;
   }
 
   Trumpet(){

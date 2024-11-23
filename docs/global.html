@@ -205,7 +205,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line100">line 100</a>
+        <a href="wave_utils.js.html">wave/utils.js</a>, <a href="wave_utils.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -248,6 +248,277 @@
     <dd>
         
 <span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createAudio"><span class="type-signature"></span>createAudio<span class="signature">()</span><span class="type-signature"> &rarr; {HTMLAudioElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a new audio input element and append it to the DOM.
+Maintain a reference to the created audio input.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom_dom.js.html">dom/dom.js</a>, <a href="dom_dom.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The created audio element</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">HTMLAudioElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createCanvas"><span class="type-signature"></span>createCanvas<span class="signature">(options)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a new canvas element and append it to the DOM.
+Maintain a reference to the created canvas.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Options for the canvas (width, height, etc.)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom_dom.js.html">dom/dom.js</a>, <a href="dom_dom.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The created canvas element</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">HTMLCanvasElement</span>
 
 
     </dd>
@@ -317,6 +588,9 @@ If no instrument is selected, it defaults to Piano.</p>
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
 
 
             
@@ -326,7 +600,7 @@ If no instrument is selected, it defaults to Piano.</p>
 
             
 
-            <td class="description last"><p>The name of the musical note (e.g., &quot;C4&quot;, &quot;A4&quot;).</p></td>
+            <td class="description last"><p>The name or number of the musical note (e.g., &quot;A4&quot;, &quot;440&quot;).</p></td>
         </tr>
 
     
@@ -367,7 +641,7 @@ If no instrument is selected, it defaults to Piano.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="player.js.html">player.js</a>, <a href="player.js.html#line21">line 21</a>
+        <a href="wave_player.js.html">wave/player.js</a>, <a href="wave_player.js.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -428,7 +702,8 @@ If no instrument is selected, it defaults to Piano.</p>
     <pre class="prettyprint"><code>// Select an instrument and create a note
 PN.instrument('piano');    // Select piano instrument
 const note = createNote('C4'); // Creates a note with frequency for C4
-console.log(note);         // Logs the created note</code></pre>
+console.log(note);         // Logs the created note
+PN.save();</code></pre>
 
 
 
@@ -541,7 +816,7 @@ Notes are processed and encoded into a Tune instance.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="player.js.html">player.js</a>, <a href="player.js.html#line70">line 70</a>
+        <a href="wave_player.js.html">wave/player.js</a>, <a href="wave_player.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -607,6 +882,458 @@ const songData = [
 PN.setVolume(0.5); // Set volume level
 const song = createSong(songData); // Create a song from the input data
 console.log(song); // Logs the encoded song data</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="parseWav"><span class="type-signature"></span>parseWav<span class="signature">(buffer)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Parses WAV file data from an ArrayBuffer.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ArrayBuffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The WAV file buffer.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="input_wavProcessor.js.html">input/wavProcessor.js</a>, <a href="input_wavProcessor.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Parsed WAV data including sample rate and audio samples.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="processAudioData"><span class="type-signature"></span>processAudioData<span class="signature">(audioData, sampleRate)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>audioData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The audio data samples.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sampleRate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The sample rate of the audio data.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="input_wavProcessor.js.html">input/wavProcessor.js</a>, <a href="input_wavProcessor.js.html#line87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="readWavFile"><span class="type-signature"></span>readWavFile<span class="signature">(url)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Reads a WAV file from the provided URL, parses it, and processes the audio data.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The URL of the WAV file to read.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="input_wavProcessor.js.html">input/wavProcessor.js</a>, <a href="input_wavProcessor.js.html#line8">line 8</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -717,7 +1444,7 @@ console.log(song); // Logs the encoded song data</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="setProperties.js.html">setProperties.js</a>, <a href="setProperties.js.html#line13">line 13</a>
+        <a href="wave_setProperties.js.html">wave/setProperties.js</a>, <a href="wave_setProperties.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -861,7 +1588,7 @@ console.log(PN.duration);  // Logs: 1</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="setProperties.js.html">setProperties.js</a>, <a href="setProperties.js.html#line43">line 43</a>
+        <a href="wave_setProperties.js.html">wave/setProperties.js</a>, <a href="wave_setProperties.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -893,7 +1620,7 @@ console.log(PN.duration);  // Logs: 1</code></pre>
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>// Set the harmonic function to 'first'
-setHarmonic(first);
+PN.setHarmonic(first);
 console.log(PN.harmonic);  // Logs: [function: first]</code></pre>
 
 
@@ -1005,7 +1732,7 @@ console.log(PN.harmonic);  // Logs: [function: first]</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="setProperties.js.html">setProperties.js</a>, <a href="setProperties.js.html#line28">line 28</a>
+        <a href="wave_setProperties.js.html">wave/setProperties.js</a>, <a href="wave_setProperties.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -1043,6 +1770,445 @@ console.log(PN.volume);  // Logs: 0.75</code></pre>
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="singVoice"><span class="type-signature"></span>singVoice<span class="signature">(noteName)</span><span class="type-signature"> &rarr; {File|undefined}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Creates a musical note with the given note name.
+If no instrument is selected, it defaults to Piano.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>noteName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of audio file you wish to replicate.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="wave_player.js.html">wave/player.js</a>, <a href="wave_player.js.html#line183">line 183</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>A new audio file instance with the specified pitch, or undefined if the note is not found.</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">File</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Select an instrument and create a note
+     // Wrap everything in an async function
+     async function runPNExample() {
+         console.log(PN);  // This should print the PN object
+          PN.instrument('British'); // Select the instrument
+          // PN.setVolume(0.5); // Set volume (optional)
+
+          // Wait for PN.singVoice to complete
+          const song = await PN.singVoice('recording2.wav');
+
+          console.log("Song created:", song);
+          console.log(PN.volume);  // Logs the current volume
+              setTimeout(() => {
+                  PN.save(); // Call save after the delay
+                  saveLogToFile(logMessages);
+
+              }, 8000); // Delay in milliseconds (5000ms = 5s)
+      }
+
+      // Run the function
+      runPNExample();</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="yin"><span class="type-signature"></span>yin<span class="signature">(data, sampleRate, threshold<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Enhanced YIN algorithm to estimate fundamental frequency, duration, and volume of audio signal</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The time-domain data for the audio signal</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sampleRate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The sample rate</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>threshold</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0.07
+                
+                </td>
+            
+
+            <td class="description last"><p>The threshold</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="input_yin.js.html">input/yin.js</a>, <a href="input_yin.js.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object with frequency, volume, and chunk duration</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -1058,13 +2224,13 @@ console.log(PN.volume);  // Logs: 0.75</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calculateFrequency">calculateFrequency</a></li><li><a href="global.html#createNote">createNote</a></li><li><a href="global.html#createSong">createSong</a></li><li><a href="global.html#setDuration">setDuration</a></li><li><a href="global.html#setHarmonic">setHarmonic</a></li><li><a href="global.html#setVolume">setVolume</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calculateFrequency">calculateFrequency</a></li><li><a href="global.html#createAudio">createAudio</a></li><li><a href="global.html#createCanvas">createCanvas</a></li><li><a href="global.html#createNote">createNote</a></li><li><a href="global.html#createSong">createSong</a></li><li><a href="global.html#parseWav">parseWav</a></li><li><a href="global.html#processAudioData">processAudioData</a></li><li><a href="global.html#readWavFile">readWavFile</a></li><li><a href="global.html#setDuration">setDuration</a></li><li><a href="global.html#setHarmonic">setHarmonic</a></li><li><a href="global.html#setVolume">setVolume</a></li><li><a href="global.html#singVoice">singVoice</a></li><li><a href="global.html#yin">yin</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 09 2024 20:06:59 GMT+0100 (West Africa Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Sat Nov 23 2024 12:14:45 GMT+0100 (West Africa Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -81,13 +81,12 @@ function parseWav(buffer) {
 }
 
 /**
- * Processes audio data, divides it into chunks, and calculates frequency, duration, and volume using YIN.
  * @param {Float32Array} audioData - The audio data samples.
  * @param {number} sampleRate - The sample rate of the audio data.
  */
 function processAudioData(audioData, sampleRate) {
   let voiceFrequencies = new Map();
-  const chunkSize = 516; // Adjusted chunk size for more effective analysis
+  const chunkSize = 8; // Adjusted chunk size for more effective analysis
   const numChunks = Math.ceil(audioData.length / chunkSize);
 
   //console.log("Number of Chunks:", numChunks);

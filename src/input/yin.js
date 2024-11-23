@@ -104,5 +104,5 @@ export function yin(data, sampleRate, aThreshold = DEFAULT_THRESHOLD) {
   // Step 7: Calculate the chunk duration in seconds
   const duration = data.length / sampleRate;
 
-  return { frequency, duration, volume };
+  return { frequency,  volume, duration };
 }

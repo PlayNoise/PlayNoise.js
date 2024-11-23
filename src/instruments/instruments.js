@@ -1,25 +1,33 @@
 //instruments.js
-import { drop,rise,round,triangle,tadpole,flat,combi,diamond,drawl,tempered, EnvelopeAHDSR } from './envelope.js'; // Assuming drop is an envelope function
-import { first, second, third  , stringed} from '../wave/harmonic.js';
+import { drop,rise,
+        round,triangle,
+        tadpole,flat,
+         piano, glottalStop,
+         combi,diamond,
+         drawl,tempered,
+          EnvelopeAHDSR,
+          Organ, xylophone,
+          electricGuitar , violin,  
+           trumpet } from './envelope.js'; // Assuming drop is an envelope function
+import { first, second, third ,stringed} from '../wave/harmonic.js';
 
 export class Instruments{
 
   Piano(){
-
-  const oscillators = [
-        { w: "sine", v: 0.4, d: 0.7, r: 0.1 },
-        { w: "triangle", v: 0.4, d: 0.7, s: 0.1, g: 1, a: 0.01, k: -1.2 }
-    ];        
-  return oscillators;
+     
+  return piano;
   
+  }
+  British(){
+    return glottalStop;
   }
 
   Organ(){
-    return rise;
+    return organ;
   }
 
   Guitar(){
-    return round;
+    return electricGuitar;
   }
 
   Bass(){
@@ -27,11 +35,11 @@ export class Instruments{
   }
 
   Violin(){
-    return flat;
+    return Violin;
   }
 
   Trumpet(){
-    return first;
+    return trumpet;
 
   }
 

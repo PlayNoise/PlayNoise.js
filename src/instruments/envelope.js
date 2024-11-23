@@ -58,9 +58,11 @@ Release (R): 0 (no release)
 */
 export function rise(input, duration) {
   return Math.sin((Math.PI * input) / (2 * duration));
+
 }
 
-//   . -- .
+// flute 
+//  . -- .
 //  /      \
 // /        \
 // Round envelope: sine wave up and down
@@ -86,9 +88,20 @@ Sustain (S): 0 (no sustain phase)
 Release (R): Implicit (since the function returns to 0).
 */
 
+/*
+
+/\    /\
+  \/\/
+
+*/
 export function triangle(input, duration) {
   return (2 / Math.PI) * Math.asin(Math.sin((2 * Math.PI * input) / duration));
 }
+
+/*
+/|    /|
+  |   |
+*/
 
 // Tadpole-shaped envelope
 export function tadpole(input, duration) {
@@ -98,6 +111,10 @@ export function tadpole(input, duration) {
     0.25 * Math.sin((4 * Math.PI * input) / duration);
 }
 
+/*   /\/\/\        /\/\/\
+  /      \      /      \
+
+*/
 // Combi envelope: combination of sine and cosine
 export function combi(input, duration) {
   return (Math.sin((Math.PI * input) / duration) / 2) +
@@ -105,6 +122,11 @@ export function combi(input, duration) {
 }
 
 // Diamond envelope: multiple sine waves combined
+/*
+/\  /\  /\      /\
+  \/  \/  \/\/  \/
+
+*/
 export function diamond(input, duration) {
   return ((2 / Math.PI) *
     Math.asin(Math.sin((Math.PI * input) / duration)) / 4) +
@@ -120,34 +142,348 @@ export function drawl(input, duration) {
 export function tempered(input, duration) {
   return drop(input, duration) * drawl(input, duration);
 }
-
-// Example AHDSR envelope function
-export function EnvelopeAHDSR(time, duration) {
-  const attack = 0.1; // Attack time (seconds)
-  const hold = 0.05; // Hold time (seconds)
-  const decay = 0.2; // Decay time (seconds)
-  const sustainLevel = 0.7; // Sustain level
-  const release = 0.5; // Release time (seconds)
-
-  const attackEnd = attack;
-  const holdEnd = attack + hold;
-  const decayEnd = holdEnd + decay;
-  const releaseStart = duration - release;
-
-  if (time < attackEnd) {
-    return time / attack; // Linear attack
-  } else if (time < holdEnd) {
-    return 1; // Hold
-  } else if (time < decayEnd) {
-    return 1 - ((time - holdEnd) / decay) * (1 - sustainLevel); // Decay
-  } else if (time < releaseStart) {
-    return sustainLevel; // Sustain
-  } else if (time <= duration) {
-    return sustainLevel * (1 - (time - releaseStart) / release); // Release
-  } else {
-    return 0; // Beyond duration
-  }
+/*   ~~~   ~~~
+  /   \ /   \
+ /     \     \
+*/
+export function organLike(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.6 * Math.sin((4 * Math.PI * input) / duration) +
+         0.4 * Math.sin((6 * Math.PI * input) / duration);
 }
 
-// Export the envelopes object
+
+/*
+drum or gong
+  ~~~~
+ /    \
+/      ~~~
+       \
+        ~
+
+
+*/
+export function percussionLike(input, duration) {
+  return Math.exp(-input / duration) * Math.sin((2 * Math.PI * input) / duration);
+}
+
+
+/*
+   ~~~   ~~~   ~~~
+  /   \ /   \ /   \
+ /     \     \
+
+*/
+
+export function woodwindLike(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.75 * Math.sin((3 * Math.PI * input) / duration) +
+         0.5 * Math.sin((5 * Math.PI * input) / duration);
+}
+
+/*
+  ~~~~
+ /    \
+/      ~~~
+       \
+        ~~
+
+*/
+
+export function bellLike(input, duration) {
+  return Math.exp(-input / duration) *
+         (Math.sin((2 * Math.PI * input) / duration) +
+          0.5 * Math.sin((4 * Math.PI * input) / duration));
+}
+/*
+   ~~~   ~~~   ~~~
+  /   \ /   \ /   \
+ /     \     \
+
+*/
+
+export function guitar(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.5 * Math.sin((4 * Math.PI * input) / duration) +
+         0.25 * Math.sin((6 * Math.PI * input) / duration);
+}
+/*
+  /|  /|  /|  /|
+ / | / | / | / |
+
+*/
+
+export function brassLike(input, duration) {
+  return 2 * (input / duration - Math.floor(input / duration + 0.5));
+}
+
+/*
+  /\/\__/\/\__
+ /            \
+/              \
+
+*/
+
+export function electricGuitar(input, duration) {
+  return Math.tanh(
+    Math.sin((2 * Math.PI * input) / duration) +
+    0.5 * Math.sin((4 * Math.PI * input) / duration)
+  );
+}
+
+
+/*
+  ~~~~      ~~~~
+ /    \    /    \
+/      \  /      \
+
+*/
+export function bassGuitar(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.3 * Math.sin((6 * Math.PI * input) / duration) +
+         0.1 * Math.sin((10 * Math.PI * input) / duration);
+}
+/*
+   ~~~   ~~~   ~~~
+  /   \ /   \ /   \
+ /     \     \
+
+*/
+
+export function trumpet(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.7 * Math.sin((3 * Math.PI * input) / duration) +
+         0.5 * Math.sin((5 * Math.PI * input) / duration);
+}
+
+/*
+
+  ~~~      ~~~
+ /   \    /   \
+/     \  /     \
+
+
+*/
+
+export  function cello(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.4 * Math.sin((4 * Math.PI * input) / duration) +
+         0.2 * Math.sin((6 * Math.PI * input) / duration);
+}
+
+/*
+   ~~~   ~~~
+  /   \ /   \
+ /     \     \
+
+*/
+export  function harp(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.5 * Math.sin((4 * Math.PI * input) / duration) +
+         0.25 * Math.sin((8 * Math.PI * input) / duration);
+}
+
+/*
+
+  ~~~~~   ~~~~~
+ /     \ /     \
+/       \       \
+
+*/
+export  function piano(input, duration) {
+  return Math.exp(-input / duration) *
+         (Math.sin((2 * Math.PI * input) / duration) +
+          0.5 * Math.sin((3 * Math.PI * input) / duration) +
+          0.3 * Math.sin((5 * Math.PI * input) / duration));
+}
+
+/*
+  ~~~   ~~~   ~~~
+ /   \ /   \ /   \
+
+*/
+export  function violin(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.6 * Math.sin((4 * Math.PI * input) / duration) +
+         0.3 * Math.sin((6 * Math.PI * input) / duration);
+}
+
+/*
+  ~~~   ~~~   ~~~
+ /   \ /   \ /   \
+
+*/
+
+export function synthPad(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.7 * Math.sin((2.5 * Math.PI * input) / duration) +
+         0.4 * Math.sin((3 * Math.PI * input) / duration);
+}
+
+/*
+
+   ~~~   ~~~
+  /   \ /   \
+ /     \     \
+
+*/
+
+export  function organ(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.5 * Math.sin((4 * Math.PI * input) / duration) +
+         0.3 * Math.sin((8 * Math.PI * input) / duration);
+}
+
+/*
+  ~~~   ~~~
+ /   \ /   \
+/     \
+
+*/
+
+export  function xylophone(input, duration) {
+  return Math.exp(-input / duration) *
+         (Math.sin((2 * Math.PI * input) / duration) +
+          0.8 * Math.sin((3 * Math.PI * input) / duration));
+}
+
+/*
+
+   ~~~   ~~~
+  /   \ /   \
+ /     \     \
+
+*/
+
+export  function saxophone(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.75 * Math.sin((3 * Math.PI * input) / duration) +
+         0.5 * Math.sin((5 * Math.PI * input) / duration) +
+         0.25 * Math.sin((7 * Math.PI * input) / duration);
+}
+
+/*
+   ~~~      ~~~
+  /   \    /   \
+ /     \  /     \
+
+*/
+
+export  function trombone(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.6 * Math.sin((4 * Math.PI * input) / duration) +
+         0.4 * Math.sin((6 * Math.PI * input) / duration);
+}
+
+/*
+  ~~~
+ /   \
+/     \
+   ~~
+
+*/
+export  function marimba(input, duration) {
+  return Math.exp(-input / (2 * duration)) *
+         (Math.sin((2 * Math.PI * input) / duration) +
+          0.5 * Math.sin((4 * Math.PI * input) / duration));
+}
+
+/*
+   ~~~   ~~~   ~~~
+  /   \ /   \ /   \
+ /     \     \
+
+
+*/
+
+export  function acousticGuitar(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.5 * Math.sin((3 * Math.PI * input) / duration) +
+         0.25 * Math.sin((5 * Math.PI * input) / duration);
+}
+
+/*
+
+  ~~~~~
+ /     \
+/       \
+
+*/
+export  function timpani(input, duration) {
+  return Math.exp(-input / duration) *
+         (Math.sin((2 * Math.PI * input) / duration) +
+          0.3 * Math.sin((6 * Math.PI * input) / duration));
+}
+
+/*
+   ~~~   ~~~
+  /   \ /   \
+ /     \     \
+
+*/
+export  function clarinet(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.5 * Math.sin((3 * Math.PI * input) / duration) +
+         0.25 * Math.sin((5 * Math.PI * input) / duration);
+}
+
+/*
+   ~~~   ~~~   ~~~
+  /   \ /   \ /   \
+ /     \     \
+
+*/
+
+export  function bagpipes(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.6 * Math.sin((4 * Math.PI * input) / duration) +
+         0.4 * Math.sin((6 * Math.PI * input) / duration) +
+         0.2 * Math.sin((8 * Math.PI * input) / duration);
+}
+
+/*
+  ~~~
+ /   \
+/     \
+
+*/
+export  function synthBass(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.4 * Math.sin((4 * Math.PI * input) / duration);
+}
+
+/*
+   ~~~   ~~~
+  /   \ /   \
+ /     \
+
+*/
+
+export  function steelDrum(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.7 * Math.sin((3 * Math.PI * input) / duration) +
+         0.4 * Math.sin((5 * Math.PI * input) / duration);
+}
+
+/*
+   ~~~   ~~~   ~~~
+  /   \ /   \ /   \
+ /     \
+
+*/
+
+export  function accordion(input, duration) {
+  return Math.sin((2 * Math.PI * input) / duration) +
+         0.8 * Math.sin((3 * Math.PI * input) / duration) +
+         0.5 * Math.sin((5 * Math.PI * input) / duration);
+}
+
+export function glottalStop(input, duration) {
+  const base = Math.sin((2 * Math.PI * input) / duration);
+  const slide = 0.2 * Math.sin((4 * Math.PI * input) / duration);
+  return base + slide;
+}
+
+
+
 export { envelopes };

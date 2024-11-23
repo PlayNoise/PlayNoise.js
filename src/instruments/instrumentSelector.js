@@ -30,6 +30,13 @@ function instrument(instrumentName) {
     case 'drum':
       PN.currentInstrument = new Instruments().Drum();
       break;
+    case 'british':  
+      PN.currentInstrument = new Instruments().British();
+      break;
+    case 'xylophone':  
+      PN.currentInstrument = new Instruments().Xylophone();
+      break;
+
     default:
       console.log('Instrument not found!');
       return;

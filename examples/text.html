@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="pn-library.js"></script>
+
+</head>
+<body>
+<script type="text/javascript">
+// Define song data
+const songData = [
+    "ch1[1.5:A4-F5]",
+    "ch2[0.5:c4]",
+    "ch2[2.0:G3-E4-D4]"
+];
+
+// Create a song
+PN.instrument("Cello");
+PN.setVolume(0.5); // Set volume level
+const song = PN.createSong(songData); // Create a song from the input data
+PN.save()
+console.log(song); 
+</script>
+</body>
+</html>

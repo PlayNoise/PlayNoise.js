@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayNoise Voice to Instrument</title>
+  </head>
+  <body>
+    <h1>PlayNoise Voice to Instrument</h1>
+
+    <!-- Include the pn-library.js script -->
+    <script src="pn-library.js"></script>
+    <select id="instrumentSelect">
+      <option value="thickbass">ThickBass</option>
+      <option value="banjo">Banjo</option>
+      <option value="funcklead">FunckLead</option>
+      <option value="Trumpet">Trumpet</option>
+      <option value="Organ60">60's Organ</option>
+      <option value="cello">Cello</option>
+      <option value="acousticguitar">AcousticGuitar</option>
+    </select>
+
+    <script>
+      // Function to set the selected instrument
+      function selectInstrument() {
+        var selectedInstrument =
+          document.getElementById("instrumentSelect").value;
+        PN.instrument(selectedInstrument);
+        console.log("Instrument selected:", selectedInstrument);
+      }
+
+      // Wrap everything in an async function
+      async function runPNExample() {
+        console.log(PN); // This should print the PN object
+
+        // Use the default selected instrument on load
+        selectInstrument();
+
+        // Wait for PN.singVoice to complete
+        const song = await PN.singVoice("recording2.wav");
+
+        console.log("Song created:", song);
+
+        setTimeout(() => {
+          PN.save(); // Call save after the delay
+        }, 8000); // Delay in milliseconds
+      }
+
+      // Run the function
+    </script>
+    <button onclick="runPNExample()">CONVERT</button>
+  </body>
+</html>

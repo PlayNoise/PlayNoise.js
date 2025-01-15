@@ -1,11 +1,11 @@
-import PN from '../pn.js';
-import { Note ,  Tune  } from './encoder.js'; 
-import { first } from './harmonic.js'; 
-import { Instruments } from '../instruments/instruments.js';
-import parseSongInput from '../input/parseStringInput.js';
-import pitchFrequencies from '../pitchFrequencies.json';
-import {readWavFile} from '../input/wavProcessor.js';
-import {setInputInstrument} from './utils.js'
+import PN from "../pn.js";
+import { Note, Tune } from "./encoder.js";
+import { first } from "./harmonic.js";
+import { Instruments } from "../instruments/instruments.js";
+import parseSongInput from "../input/parseStringInput.js";
+import pitchFrequencies from "../pitchFrequencies.json";
+import { readWavFile } from "../input/wavProcessor.js";
+import { setInputInstrument } from "./synth.js";
 
 /**
  * Creates a musical note with the given note name.
@@ -16,7 +16,7 @@ import {setInputInstrument} from './utils.js'
  *
  * @example
  * // Select an instrument and create a note
- * PN.instrument('piano');    // Select piano instrument
+ * PN.instrument('cello');    // Select piano instrument
  * const note = createNote('C4'); // Creates a note with frequency for C4
  * console.log(note);         // Logs the created note
  * PN.save();
@@ -25,20 +25,20 @@ import {setInputInstrument} from './utils.js'
 function createNote(noteName) {
   // Set default instrument to piano if no instrument is selected
   if (!PN.currentInstrument) {
-    console.log('No instrument selected, defaulting to Piano.');
-    PN.currentInstrument = new Instruments().Piano(); // Default to piano
+    console.log("No instrument selected, defaulting to Banjo.");
+    PN.currentInstrument = new Instruments().Banjo(); // Default to piano
   }
 
   var frequency = pitchFrequencies[noteName];
   if (!frequency) {
     frequency = parseInt(noteName);
-    if (isNaN(frequency)){
+    if (isNaN(frequency)) {
       console.log(`Note ${noteName} not found!`);
-      return;      
+      return;
     }
   }
 
-  if (typeof noteName === 'number'){
+  if (typeof noteName === "number") {
     frequency = noteName;
   }
   if (!frequency) {
@@ -51,9 +51,22 @@ function createNote(noteName) {
     [0], // No accidentals
     PN.duration, // Use PN's duration
     PN.currentInstrument, // Use the selected instrument's envelope
-    PN.harmonic, // Use PN's harmonic function
-    PN.volume // Use PN's volume level
-    );
+    PN.harmonic1,
+    PN.harmonic2,
+    PN.step,
+    PN.filter,
+    PN.filter2,
+    PN.width1,
+    PN.width2,
+    PN.filterEnv,
+    PN.lfoWave,
+    PN.glideTime,
+    PN.volume, // Use PN's volume level
+    PN.multiplier,
+    PN.noiseLevel,
+    PN.noiseState,
+    PN.ratio,
+  );
 
   console.log(`Created note ${noteName} with frequency ${frequency}`);
   return note;
@@ -70,9 +83,9 @@ function createNote(noteName) {
  * @example
  * // Define song data
  * const songData = [
- *   { duration: 1, notes: ['C4', 'E4', 'G4'] },
- *   { duration: 0.5, notes: ['A4', 'B4'] },
- *   { duration: 2, notes: ['D5'] }
+ *  "ch1[1.5:A4-F5]",
+ *  "ch2[0.5:C4]",
+ *  "ch1[2.0:G3-E4-D4]"
  * ];
  *
  * // Create a song
@@ -83,69 +96,45 @@ function createNote(noteName) {
 
 // Helper to create a song
 function createSong(songData) {
-  
-  setInputInstrument('note')
-  
   const myTune = new Tune(
     PN.key,
-    [],  // ch1: Will be filled with notes
-    []   // ch2: Will be filled with notes
-    );
+    [], // ch1: Will be filled with notes
+    [], // ch2: Will be filled with notes
+  );
 
-  const parsedData = parseSongInput(songData);  // Parse the input data
-  let songNotes = [];
+  const parsedData = parseSongInput(songData);
+  for (let channel in parsedData) {
+    const channelData = parsedData[channel];
 
-  // Loop through each parsed entry and create notes using createNote
-  parsedData.forEach(entry => {
-    const { duration, notes } = entry; // Destructure duration and notes from parsedData
-
-    // Set the duration for this note in PN (optional: use duration overrides)
-    PN.duration = duration;
-
-    // Loop through the notes and create each one using createNote
-    notes.forEach(noteName => {
-      const note = createNote(noteName); // Use createNote for each note
-      if (note) {
-        myTune.ch1.push(note); // Encode and add it to the song array
-      }
-    });
-  });
+    if (channel === "ch1") {
+      channelData.forEach((entry) => {
+        const { duration, notes } = entry;
+        PN.duration = duration;
+        notes.forEach((noteName) => {
+          const note = createNote(noteName);
+          if (note) {
+            myTune.ch1.push(note);
+          }
+        });
+      });
+    } else if (channel === "ch2") {
+      channelData.forEach((entry) => {
+        const { duration, notes } = entry;
+        PN.duration = duration;
+        notes.forEach((noteName) => {
+          const note = createNote(noteName);
+          if (note) {
+            myTune.ch2.push(note);
+          }
+        });
+      });
+    }
+  }
 
   // Concatenate all notes to form the song
-  var songDataOutput = myTune.encode();
+  var songDataOutput = myTune.encodePlane();
   PN.songDataOutput = songDataOutput;
   return songDataOutput;
-}
-
-function closestPianoFrequency(frequency) {
-    if (frequency <= 0) {
-        return  0;
-    }
-
-    // Calculate the closest piano key number
-    const keyNumber = 49 + 12 * Math.log2(frequency / 440);
-    const closestKey = Math.round(keyNumber);
-
-    // Calculate the frequency of the closest piano key
-    const closestFrequency = 440 * Math.pow(2, (closestKey - 49) / 12);
-    //console.log(`closestFrequency ${closestFrequency} and original ${frequency}!`)
-
-    return  convertToOctave(closestFrequency, 4);
-    //return  closestFrequency;
-
-}
-
-function convertToOctave(frequency, targetOctave) {
-    if (frequency <= 0) return null;
-
-    // Determine the original octave
-    const originalOctave = Math.floor(Math.log2(frequency / 440) * 12 / 12 + 4);
-
-    // Shift the frequency to the target octave
-    const scaledFrequency = frequency * Math.pow(2, targetOctave - originalOctave);
-        console.log(`scaledFrequency ${scaledFrequency} and original ${frequency}!`);
-
-    return scaledFrequency;
 }
 
 /**
@@ -160,7 +149,7 @@ function convertToOctave(frequency, targetOctave) {
  *      // Wrap everything in an async function
  *      async function runPNExample() {
  *          console.log(PN);  // This should print the PN object
- *           PN.instrument('British'); // Select the instrument
+ *           PN.instrument('Piano'); // Select the instrument
  *           // PN.setVolume(0.5); // Set volume (optional)
  *
  *           // Wait for PN.singVoice to complete
@@ -180,48 +169,53 @@ function convertToOctave(frequency, targetOctave) {
  */
 
 function singVoice(audioFile) {
+  const numChannels = 100;
 
   readWavFile(audioFile, (voiceFrequencies) => {
+    const skeleton = voiceFrequencies;
 
-        const skeleton = voiceFrequencies; // Assign voiceFrequencies to skeleton
+    const myTune = new Tune(PN.key, ...Array(numChannels).fill([]));
+    const channels = Array.from(
+      { length: numChannels },
+      (_, i) => myTune[`ch${i + 1}`],
+    );
 
-        const myTune = new Tune(
-          PN.key,
-            [],  // ch1: Will be filled with notes
-            []   // ch2: Will be filled with notes
-            );
+    for (var i = 0; i < skeleton.length; i++) {
+      console.log(`Voice number ${i + 1}`);
 
-        // Iterate over each entry in the `skeleton` Map
-        skeleton.forEach((data, index) => {
-          var frequency;
-          if ((data[0] / 1000 >= 1) || (data[0] < 80)){
-              frequency = closestPianoFrequency(87);
-          }else{
-            frequency = closestPianoFrequency(data[0]);
-          }
+      skeleton[i].forEach((data, index) => {
+        const note = new Note(
+          [Math.round(data[0])], // Frequency
+          [0], // No accidentals
+          data[2], // Duration
+          PN.currentInstrument, // Oscillators
+          PN.harmonic1,
+          PN.harmonic2,
+          PN.step,
+          PN.filter,
+          PN.filter2,
+          PN.width1,
+          PN.width2,
+          PN.filterEnv,
+          PN.lfoWave,
+          PN.glideTime,
+          data[1], // Volume
+          PN.multiplier,
+          PN.noiseLevel,
+          PN.noiseState,
+          PN.ratio,
+        );
 
-            const note = new Note(
+        if (note) {
+          channels[i].push(note);
+        }
+      });
+    }
 
-                //[Math.round(frequency)],             // Frequency
-                [Math.round(frequency)],
-                [0],                 // No accidentals
-                data[2]/2,            // Duration
-                PN.currentInstrument, // oscillators
-                PN.harmonic,         // Harmonic function
-                data[1]/2,      // Volume
-            );
-            if (note) {
-                myTune.ch1.push(note);
-            }
-        });
-        
-
-
-        // Concatenate all notes to form the song
-const songDataOutput = myTune.encode();
-PN.songDataOutput = songDataOutput;
-return songDataOutput;
-});
+    const songDataOutput = myTune.encode();
+    PN.songDataOutput = songDataOutput;
+    return songDataOutput;
+  });
 }
 
-export { createNote, createSong , singVoice};
+export { createNote, createSong, singVoice };

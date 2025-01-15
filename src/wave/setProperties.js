@@ -1,4 +1,4 @@
-import PN from '../pn.js';
+import PN from "../pn.js";
 
 /**
  * Sets the duration for notes in the PN object.

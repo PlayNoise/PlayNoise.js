@@ -1,35 +1,24 @@
 // envelope.js
 
-// Envelopes control the shape of the note and how it's played
-const envelopes = {};
+// Envelope functions control the shape of the note and how it's played
+var envelopes = {};
+var defaultParams = {
+  g: 1,
+  w: "sine",
+  t: 1,
+  f: 0,
+  v: 1,
+  a: 1,
+  h: 1,
+  d: 1,
+  s: 1,
+  r: 0,
+  p: 1,
+  q: 1,
+  k: 0,
+};
 
-// Initialize envelopes
-envelopes['drop'] = drop;
-envelopes['rise'] = rise;
-envelopes['round'] = round;
-envelopes['triangle'] = triangle;
-envelopes['tadpole'] = tadpole;
-envelopes['flat'] = flat;
-envelopes['combi'] = combi;
-envelopes['diamond'] = diamond;
-envelopes['drawl'] = drawl;
-envelopes['tempered'] = tempered;
-
-// Envelope Functions
-
-//
-// -----
-//
-// Flat envelope: constant amplitude
-/*
-Attack (A): 0 (instant)
-Decay (D): 0 (no decay)
-Sustain (S): 1 (constant sustain level)
-Release (R): 0 (no release)
-*/
-export function flat(input, duration) {
-  return 1;
-}
+// ADSHR Envelope function
 
 // -- .
 //     \
@@ -42,448 +31,309 @@ Sustain (S): 0 (no sustain)
 Release (R): The function ends at 0, meaning the release is implicit.
 */
 
-export function drop(input, duration) {
-  return Math.cos((Math.PI * input) / (2 * duration));
+export function ampEnvelope(
+  time,
+  attack,
+  decay,
+  sustain,
+  release,
+  noteDuration,
+) {
+  attack = attack / 4;
+  decay = decay / 4;
+  sustain = sustain / 4;
+  release = release / 4;
+  if (time < attack) return time / attack; // Attack phase
+  if (time < attack + decay)
+    return 1 - ((1 - sustain) * (time - attack)) / decay; // Decay phase
+  if (time < noteDuration) return sustain; // Sustain phase
+  if (time < noteDuration + release)
+    return sustain * (1 - (time - noteDuration) / release); // Release phase
+  return 0; // After release
 }
 
-//   . --
-//  /
-// /
-// Rise envelope: sine ramp up
-/*
-Attack (A): The entire duration is an attack phase, rising smoothly from 0 to 1.
-Decay (D): 0 (no decay)
-Sustain (S): 0 (no sustain)
-Release (R): 0 (no release)
-*/
-export function rise(input, duration) {
-  return Math.sin((Math.PI * input) / (2 * duration));
+export function filterEnvelope(
+  attack,
+  decay,
+  sustain,
+  release,
+  time,
+  duration,
+) {
+  attack = attack / 4;
+  decay = decay / 4;
+  sustain = sustain / 4;
+  release = release / 4;
 
+  const minEnvelopeValue = 0.001; // Minimum envelope value to avoid cutoff = 0
+  if (time < attack) return Math.max(time / attack, minEnvelopeValue); // Attack phase
+  if (time < attack + decay)
+    return Math.max(
+      1 - ((1 - sustain) * (time - attack)) / decay,
+      minEnvelopeValue,
+    ); // Decay phase
+  return Math.max(sustain, minEnvelopeValue); // Sustain phase
 }
 
-// flute 
-//  . -- .
-//  /      \
-// /        \
-// Round envelope: sine wave up and down
-/*
-Attack (A): The first half of the duration (rising from 0 to 1).
-Decay (D): The second half of the duration (falling from 1 to 0).
-Sustain (S): 0 (no sustain phase)
-Release (R): Implicit (since the function returns to 0).
-*/
-export function round(input, duration) {
-  return Math.sin((Math.PI * input) / duration);
+export function EvolvingLead(time, duration) {
+  const attack = 2.5;
+  const decay = 3.0;
+  const sustain = 0.35;
+  const release = 0;
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-//   /\
-//  /  \
-// /    \
-
-// Triangle envelope: sawtooth wave
-/*
-Attack (A): The rising part of the triangle (from 0 to 1).
-Decay (D): The falling part of the triangle (from 1 to 0).
-Sustain (S): 0 (no sustain phase)
-Release (R): Implicit (since the function returns to 0).
-*/
-
-/*
-
-/\    /\
-  \/\/
-
-*/
-export function triangle(input, duration) {
-  return (2 / Math.PI) * Math.asin(Math.sin((2 * Math.PI * input) / duration));
+export function EvolvingLeadPad(time, duration) {
+  const attack = 9; // Attack time in seconds
+  const decay = 2.5; // Decay time in seconds
+  const sustain = 0.35; // Sustain level (0 to 1)
+  const release = duration; // Ful
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-/*
-/|    /|
-  |   |
-*/
-
-// Tadpole-shaped envelope
-export function tadpole(input, duration) {
-  return Math.sin((Math.PI * input) / duration) -
-    0.5 * Math.sin((2 * Math.PI * input) / duration) +
-    0.333 * Math.sin((3 * Math.PI * input) / duration) -
-    0.25 * Math.sin((4 * Math.PI * input) / duration);
+export function FunckLead(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 0.1; // Decay time in seconds
+  const sustain = 0; // Sustain level (0%)
+  const release = 0;
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-/*   /\/\/\        /\/\/\
-  /      \      /      \
-
-*/
-// Combi envelope: combination of sine and cosine
-export function combi(input, duration) {
-  return (Math.sin((Math.PI * input) / duration) / 2) +
-    (Math.cos((Math.PI * input) / (2 * duration)) / 3);
+export function ThickBass(time, duration) {
+  const attack = 0.5; // Attack time in seconds
+  const decay = 0.5; // Decay time in seconds
+  const sustain = 0; // Sustain level (0%)
+  const release = 0.4; // Release time in seconds
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-// Diamond envelope: multiple sine waves combined
-/*
-/\  /\  /\      /\
-  \/  \/  \/\/  \/
+export function Organ60(time, duration) {
+  // Filter Envelope Parameters
+  const attack = 0; // Attack time in seconds
+  const decay = 0.16; // Decay time in seconds
+  const sustain = 0.34; // Sustain level (34%)
+  const release = 0; // Release time in seconds
 
-*/
-export function diamond(input, duration) {
-  return ((2 / Math.PI) *
-    Math.asin(Math.sin((Math.PI * input) / duration)) / 4) +
-    ((2 / Math.PI) * Math.asin(Math.sin((2 * Math.PI * input) / duration)) / 4);
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-// Drawl envelope: logarithmic decay
-export function drawl(input, duration) {
-  return 1 / Math.log10((2 * Math.PI * input / duration) + 1.9);
+export function PercussiveStaccatoPad(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 0.5; // Decay time in seconds
+  const sustain = 0.6; // Sustain level (60%)
+  const release = 0; // Release time in seconds
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-// Tempered envelope: combines drop and drawl
-export function tempered(input, duration) {
-  return drop(input, duration) * drawl(input, duration);
-}
-/*   ~~~   ~~~
-  /   \ /   \
- /     \     \
-*/
-export function organLike(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.6 * Math.sin((4 * Math.PI * input) / duration) +
-         0.4 * Math.sin((6 * Math.PI * input) / duration);
+export function Trumpet(time, duration) {
+  // Filter Envelope Parameters
+  const attack = 5.5; // Attack time in seconds
+  const decay = 1.7; // Decay time in seconds
+  const sustain = 0.18; // Sustain level (18%)
+  const release = 0.05; // Release time in seconds
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-
-/*
-drum or gong
-  ~~~~
- /    \
-/      ~~~
-       \
-        ~
-
-
-*/
-export function percussionLike(input, duration) {
-  return Math.exp(-input / duration) * Math.sin((2 * Math.PI * input) / duration);
+export function Banjo(time, duration) {
+  // Filter Envelope Parameters
+  const attack = 0; // Attack time in seconds
+  const decay = 0.19; // Decay time in seconds
+  const sustain = 0; // Sustain level (0%)
+  const release = 0.19; // Release time in seconds
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-
-/*
-   ~~~   ~~~   ~~~
-  /   \ /   \ /   \
- /     \     \
-
-*/
-
-export function woodwindLike(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.75 * Math.sin((3 * Math.PI * input) / duration) +
-         0.5 * Math.sin((5 * Math.PI * input) / duration);
+export function Cello(time, duration) {
+  // Filter Envelope Parameters
+  const attack = 0; // Attack time in seconds
+  const decay = 3.29; // Decay time in seconds
+  const sustain = 0.78; // Sustain level (0%)
+  const release = duration; // Release time in seconds
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-/*
-  ~~~~
- /    \
-/      ~~~
-       \
-        ~~
-
-*/
-
-export function bellLike(input, duration) {
-  return Math.exp(-input / duration) *
-         (Math.sin((2 * Math.PI * input) / duration) +
-          0.5 * Math.sin((4 * Math.PI * input) / duration));
-}
-/*
-   ~~~   ~~~   ~~~
-  /   \ /   \ /   \
- /     \     \
-
-*/
-
-export function guitar(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.5 * Math.sin((4 * Math.PI * input) / duration) +
-         0.25 * Math.sin((6 * Math.PI * input) / duration);
-}
-/*
-  /|  /|  /|  /|
- / | / | / | / |
-
-*/
-
-export function brassLike(input, duration) {
-  return 2 * (input / duration - Math.floor(input / duration + 0.5));
+export function AcousticGuitar(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 3.35; // Decay time in seconds
+  const sustain = 0; // Sustain level (0%)
+  const release = 0.29; // Release time in seconds
+  return filterEnvelope(attack, decay, sustain, release, time, duration);
 }
 
-/*
-  /\/\__/\/\__
- /            \
-/              \
+/*-----------------------------------------------------------------------------*/
 
-*/
+export function ampFunckLead(time, duration) {
+  // Amplifier Envelope Parameters
+  const attack = 0;
+  const decay = 0;
+  const sustain = 1; // Full sustain
+  const release = 0;
 
-export function electricGuitar(input, duration) {
-  return Math.tanh(
-    Math.sin((2 * Math.PI * input) / duration) +
-    0.5 * Math.sin((4 * Math.PI * input) / duration)
-  );
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-
-/*
-  ~~~~      ~~~~
- /    \    /    \
-/      \  /      \
-
-*/
-export function bassGuitar(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.3 * Math.sin((6 * Math.PI * input) / duration) +
-         0.1 * Math.sin((10 * Math.PI * input) / duration);
-}
-/*
-   ~~~   ~~~   ~~~
-  /   \ /   \ /   \
- /     \     \
-
-*/
-
-export function trumpet(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.7 * Math.sin((3 * Math.PI * input) / duration) +
-         0.5 * Math.sin((5 * Math.PI * input) / duration);
+export function ampEffectedLeadPad(time, duration) {
+  const attack = 0;
+  const decay = 0;
+  const sustain = 1; // Full sustain
+  const release = duration; // Full release time
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-
-  ~~~      ~~~
- /   \    /   \
-/     \  /     \
-
-
-*/
-
-export  function cello(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.4 * Math.sin((4 * Math.PI * input) / duration) +
-         0.2 * Math.sin((6 * Math.PI * input) / duration);
+export function ampThickBass(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 0; // Decay time in seconds
+  const sustain = 1; // Full sustain
+  const release = 0.4; // Release time in seconds
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-   ~~~   ~~~
-  /   \ /   \
- /     \     \
+export function ampPercussiveStaccatoPad(time, duration) {
+  const attack = 0;
+  const decay = 0;
+  const sustain = 1;
+  const release = 5;
 
-*/
-export  function harp(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.5 * Math.sin((4 * Math.PI * input) / duration) +
-         0.25 * Math.sin((8 * Math.PI * input) / duration);
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-
-  ~~~~~   ~~~~~
- /     \ /     \
-/       \       \
-
-*/
-export  function piano(input, duration) {
-  return Math.exp(-input / duration) *
-         (Math.sin((2 * Math.PI * input) / duration) +
-          0.5 * Math.sin((3 * Math.PI * input) / duration) +
-          0.3 * Math.sin((5 * Math.PI * input) / duration));
+export function ampOrgan60(time, duration) {
+  // Amplifier Envelope Parameters
+  const attack = 0; // Attack time in seconds
+  const decay = 0; // Decay time in seconds
+  const sustain = 1; // Full sustain
+  const release = 0.17; // Release time in seconds
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-  ~~~   ~~~   ~~~
- /   \ /   \ /   \
-
-*/
-export  function violin(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.6 * Math.sin((4 * Math.PI * input) / duration) +
-         0.3 * Math.sin((6 * Math.PI * input) / duration);
+export function ampTrumpet(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 0; // Decay time in seconds
+  const sustain = 1; // Full sustain
+  const release = 1;
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-  ~~~   ~~~   ~~~
- /   \ /   \ /   \
-
-*/
-
-export function synthPad(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.7 * Math.sin((2.5 * Math.PI * input) / duration) +
-         0.4 * Math.sin((3 * Math.PI * input) / duration);
+export function ampBanjo(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 0.67; // Decay time in seconds
+  const sustain = 0; // Sustain level (0%)
+  const release = 0.67; // Release time in seconds
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-
-   ~~~   ~~~
-  /   \ /   \
- /     \     \
-
-*/
-
-export  function Organ(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.5 * Math.sin((4 * Math.PI * input) / duration) +
-         0.3 * Math.sin((8 * Math.PI * input) / duration);
+export function ampCello(time, duration) {
+  const attack = 0.06; // Attack time in seconds
+  const decay = duration; // Decay time in seconds
+  const sustain = 1; // Sustain level (0%)
+  const release = 0.3; // Release time in seconds
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
-  ~~~   ~~~
- /   \ /   \
-/     \
-
-*/
-
-export  function xylophone(input, duration) {
-  return Math.exp(-input / duration) *
-         (Math.sin((2 * Math.PI * input) / duration) +
-          0.8 * Math.sin((3 * Math.PI * input) / duration));
+export function ampAcousticGuitar(time, duration) {
+  const attack = 0; // Attack time in seconds
+  const decay = 1.7; // Decay time in seconds
+  const sustain = 0; // Sustain level (0%)
+  const release = 1.7; // Release time in seconds
+  return ampEnvelope(time, attack, decay, sustain, release, duration);
 }
 
-/*
+export function adsrExpEnvelope(t, duration, params) {
+  let { a, d, h, s, r } = params;
+  a *= duration;
+  d *= duration;
+  h *= duration;
+  r *= duration;
 
-   ~~~   ~~~
-  /   \ /   \
- /     \     \
+  const expScale = (x, min, max) =>
+    (Math.exp((x - min) / (max - min)) - 1) / (Math.exp(1) - 1);
 
-*/
-
-export  function saxophone(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.75 * Math.sin((3 * Math.PI * input) / duration) +
-         0.5 * Math.sin((5 * Math.PI * input) / duration) +
-         0.25 * Math.sin((7 * Math.PI * input) / duration);
+  let amplitude = 0;
+  if (t <= a) {
+    // Exponential attack
+    amplitude = expScale(t, 0, a);
+  } else if (t <= a + d) {
+    // Exponential decay
+    amplitude = 1 - expScale(t - a, 0, d) * (1 - s);
+  } else if (t <= a + d + h) {
+    amplitude = s; // Sustain remains constant
+  } else if (t <= a + d + h + r) {
+    // Exponential release
+    amplitude = s * (1 - expScale(t - (a + d + h), 0, r));
+  } else {
+    amplitude = 0;
+  }
+  return amplitude;
 }
 
-/*
-   ~~~      ~~~
-  /   \    /   \
- /     \  /     \
+export function ADSRLogEnvelope(t, duration, params) {
+  let { a, d, h, s, r } = params;
+  a *= duration;
+  d *= duration;
+  h *= duration;
+  r *= duration;
+  const logScale = (x, min, max) =>
+    Math.log10(1 + (9 * (x - min)) / (max - min));
 
-*/
-
-export  function trombone(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.6 * Math.sin((4 * Math.PI * input) / duration) +
-         0.4 * Math.sin((6 * Math.PI * input) / duration);
+  let amplitude = 0;
+  if (t <= a) {
+    // Logarithmic attack
+    amplitude = logScale(t, 0, a);
+  } else if (t <= a + d) {
+    // Logarithmic decay
+    amplitude = 1 - logScale(t - a, 0, d) * (1 - s);
+  } else if (t <= a + d + h) {
+    amplitude = s; // Sustain remains constant
+  } else if (t <= a + d + h + r) {
+    // Logarithmic release
+    amplitude = s * (1 - logScale(t - (a + d + h), 0, r));
+  } else {
+    amplitude = 0;
+  }
+  return amplitude;
 }
 
-/*
-  ~~~
- /   \
-/     \
-   ~~
+export function ADSRLinearEnvelope(t, duration, params) {
+  var { a, d, h, s, r, k, v, g, f } = params;
+  a = a / 4;
+  d = d / 4;
+  s = s / 4;
+  r = r / 4;
+  a *= duration;
+  d *= duration;
+  h *= duration;
+  r *= duration;
 
-*/
-export  function marimba(input, duration) {
-  return Math.exp(-input / (2 * duration)) *
-         (Math.sin((2 * Math.PI * input) / duration) +
-          0.5 * Math.sin((4 * Math.PI * input) / duration));
+  let amplitude = 0;
+  if (t <= a) {
+    amplitude = t / a;
+  } else if (t <= a + d) {
+    amplitude = 1 - ((t - a) / d) * (1 - s);
+  } else if (t <= a + d + h) {
+    amplitude = s;
+  } else if (t <= a + d + h + r) {
+    amplitude = s * (1 - (t - (a + d + h)) / r);
+  } else {
+    amplitude = 0;
+  }
+
+  return amplitude * v;
 }
 
-/*
-   ~~~   ~~~   ~~~
-  /   \ /   \ /   \
- /     \     \
-
-
-*/
-
-export  function acousticGuitar(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.5 * Math.sin((3 * Math.PI * input) / duration) +
-         0.25 * Math.sin((5 * Math.PI * input) / duration);
-}
-
-/*
-
-  ~~~~~
- /     \
-/       \
-
-*/
-export  function timpani(input, duration) {
-  return Math.exp(-input / duration) *
-         (Math.sin((2 * Math.PI * input) / duration) +
-          0.3 * Math.sin((6 * Math.PI * input) / duration));
-}
-
-/*
-   ~~~   ~~~
-  /   \ /   \
- /     \     \
-
-*/
-export  function clarinet(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.5 * Math.sin((3 * Math.PI * input) / duration) +
-         0.25 * Math.sin((5 * Math.PI * input) / duration);
-}
-
-/*
-   ~~~   ~~~   ~~~
-  /   \ /   \ /   \
- /     \     \
-
-*/
-
-export  function bagpipes(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.6 * Math.sin((4 * Math.PI * input) / duration) +
-         0.4 * Math.sin((6 * Math.PI * input) / duration) +
-         0.2 * Math.sin((8 * Math.PI * input) / duration);
-}
-
-/*
-  ~~~
- /   \
-/     \
-
-*/
-export  function synthBass(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.4 * Math.sin((4 * Math.PI * input) / duration);
-}
-
-/*
-   ~~~   ~~~
-  /   \ /   \
- /     \
-
-*/
-
-export  function steelDrum(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.7 * Math.sin((3 * Math.PI * input) / duration) +
-         0.4 * Math.sin((5 * Math.PI * input) / duration);
-}
-
-/*
-   ~~~   ~~~   ~~~
-  /   \ /   \ /   \
- /     \
-
-*/
-
-export  function accordion(input, duration) {
-  return Math.sin((2 * Math.PI * input) / duration) +
-         0.8 * Math.sin((3 * Math.PI * input) / duration) +
-         0.5 * Math.sin((5 * Math.PI * input) / duration);
-}
-
-export function glottalStop(input, duration) {
-  const base = Math.sin((2 * Math.PI * input) / duration);
-  const slide = 0.2 * Math.sin((4 * Math.PI * input) / duration);
-  return base + slide;
-}
-
-
+envelopes["ampEnvelope"] = ampEnvelope;
+envelopes["ampThickBass"] = ampThickBass;
+envelopes["ThickBass"] = ThickBass;
+envelopes["ampPercussiveStaccatoPad"] = ampPercussiveStaccatoPad;
+envelopes["PercussiveStaccatoPad"] = PercussiveStaccatoPad;
+envelopes["ampOrgan60"] = ampOrgan60;
+envelopes["Organ60"] = Organ60;
+envelopes["Trumpet"] = Trumpet;
+envelopes["ampTrumpet"] = ampTrumpet;
+envelopes["Banjo"] = Banjo;
+envelopes["ampBanjo"] = ampBanjo;
+envelopes["ampCello"] = ampCello;
+envelopes["Cello"] = Cello;
+envelopes["AcousticGuitar"] = AcousticGuitar;
+envelopes["ampAcousticGuitar"] = ampAcousticGuitar;
 
 export { envelopes };

@@ -1,35 +1,38 @@
 // wavProcessor.js
-import {analyzeFrequencies , analyzeSmallChunkFrequencies, instantaneousFrequency } from '../input/fft.js';
-
+import {
+  analyzeFrequencies,
+  analyzeSmallChunkFrequencies,
+  instantaneousFrequency,
+} from "../input/fft.js";
+import { ProgressID } from "../dom/dom.js";
+var ProcessorProgress = 0;
 /**
  * Reads a WAV file from the provided URL, parses it, and processes the audio data.
  * @param {string} url - The URL of the WAV file to read.
  */
 function readWavFile(url, callback) {
   fetch(url)
-      .then(response => response.arrayBuffer())
-      .then(buffer => {
-          const wavData = parseWav(buffer); // Parse the WAV file
-          const sampleRate = wavData.sampleRate;
-          const audioData = wavData.samples;
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => {
+      const wavData = parseWav(buffer); // Parse the WAV file
+      const sampleRate = wavData.sampleRate;
+      const audioData = wavData.samples;
 
-          //console.log("WAV file parsed successfully");
-          //console.log("Sample Rate: ", sampleRate);
-          //console.log("Number of samples: ", audioData.length);
+      //console.log("WAV file parsed successfully");
+      //console.log("Sample Rate: ", sampleRate);
+      //console.log("Number of samples: ", audioData.length);
 
-          const voiceFrequencies = processAudioData(audioData, sampleRate);
-          //console.log("Voice F : ", voiceFrequencies);
+      const allVoiceFrequencies = processAudioData(audioData, sampleRate, 2);
+      //console.log("Voice F : ", voiceFrequencies);
 
-
-          if (callback) {
-              callback(voiceFrequencies); // Pass voiceFrequencies to the callback
-          }
-      })
-      .catch(err => {
-          console.error("Error loading WAV file: ", err);
-      });
+      if (callback) {
+        callback(allVoiceFrequencies); // Pass voiceFrequencies to the callback
+      }
+    })
+    .catch((err) => {
+      console.error("Error loading WAV file: ", err);
+    });
 }
-
 
 /**
  * Parses WAV file data from an ArrayBuffer.
@@ -43,7 +46,9 @@ function parseWav(buffer) {
   const bitsPerSample = view.getUint16(34, true);
   const dataOffset = 44; // WAV header size (assumes no additional sub-chunks)
   const bytesPerSample = bitsPerSample / 8;
-  const numSamples = Math.floor((view.byteLength - dataOffset) / (numChannels * bytesPerSample));
+  const numSamples = Math.floor(
+    (view.byteLength - dataOffset) / (numChannels * bytesPerSample),
+  );
 
   //console.log("Num Channels: ", numChannels);
   //console.log("Sample Rate: ", sampleRate);
@@ -58,16 +63,16 @@ function parseWav(buffer) {
 
     // Ensure we are not reading beyond the available buffer length
     if (sampleIndex >= buffer.byteLength) {
-        console.error("Sample index exceeds buffer length at sample", i);
-        break;
+      console.error("Sample index exceeds buffer length at sample", i);
+      break;
     }
 
     // If stereo, take only the left channel (instead of averaging)
     if (numChannels === 2) {
-        const left = view.getInt16(sampleIndex, true);
-        sample = left;
+      const left = view.getInt16(sampleIndex, true);
+      sample = left;
     } else {
-        sample = view.getInt16(sampleIndex, true);
+      sample = view.getInt16(sampleIndex, true);
     }
 
     // Normalize to [-1, 1] range
@@ -75,8 +80,8 @@ function parseWav(buffer) {
   }
 
   return {
-      sampleRate: sampleRate,
-      samples: samples,
+    sampleRate: sampleRate,
+    samples: samples,
   };
 }
 
@@ -84,36 +89,50 @@ function parseWav(buffer) {
  * @param {Float32Array} audioData - The audio data samples.
  * @param {number} sampleRate - The sample rate of the audio data.
  */
-function processAudioData(audioData, sampleRate) {
-  let voiceFrequencies = new Map();
-  const chunkSize = 516; // Adjusted chunk size for more effective analysis
+function processAudioData(audioData, sampleRate, n) {
+  const chunkSize = 11025; // Adjusted chunk size for more effective analysis
   const numChunks = Math.ceil(audioData.length / chunkSize);
 
-  //console.log("Number of Chunks:", numChunks);
+  // First loop: Process chunks from 0, 44100, 88200, ...
+  const results = [];
+  var ProcessorProgressCounter = 0;
 
-  for (let i = 0; i < numChunks; i++) {
-    const start = i * chunkSize;
-    const end = Math.min(start + chunkSize, audioData.length);
-    const chunk = audioData.slice(start, end);
+  for (let offsetMultiplier = 0; offsetMultiplier < n; offsetMultiplier++) {
+    const offset = 4410 * offsetMultiplier;
+    const voiceFrequencies = new Map();
 
-    // Call the analyzeFrequencies function
-    const result = analyzeFrequencies(chunk, sampleRate);
+    for (let i = 0; i < Math.ceil(audioData.length / chunkSize); i++) {
+      const start = i * chunkSize + offset;
+      const end = Math.min(start + chunkSize, audioData.length);
+      const chunk = audioData.slice(start, end);
 
-    if (!isNaN(result.dominantFrequency)) {
-      console.log(`Chunk ${i + 1}: Frequency = ${result.dominantFrequency} Hz, Volume = ${result.volume}, Duration = ${result.duration}`);
-      voiceFrequencies.set(i, [result.dominantFrequency, result.volume, result.duration]);
-    } else {
-      console.log(`Chunk ${i + 1}: Frequency could not be determined (NaN)`);
+      const result = analyzeFrequencies(chunk, sampleRate);
+      ProcessorProgressCounter++;
+      ProcessorProgress =
+        (ProcessorProgressCounter /
+          (n * Math.ceil(audioData.length / chunkSize))) *
+        100;
+      console.log(`Processor P ${ProcessorProgress}`);
+      if (!isNaN(result.dominantFrequency)) {
+        //console.log(`Chunk (offset ${offset}): Frequency = ${result.dominantFrequency} Hz, Volume = ${result.volume}, Duration = ${result.duration}`);
+        voiceFrequencies.set(i, [
+          result.dominantFrequency,
+          result.volume,
+          result.duration,
+        ]);
+      } else {
+        //console.log(`Chunk (offset ${offset}): Frequency could not be determined (NaN)`);
+      }
     }
+    results.push(voiceFrequencies);
   }
+  return results;
+}
 
-  //console.log("Processed Voice Frequencies:", voiceFrequencies); // Log all voice frequencies
-  return voiceFrequencies;
+function updateProgressBarById(id, value) {
+  const progressBar = document.getElementById(id);
+  progressBar.style.width = `${value}%`;
 }
 
 // Export functions and data for CommonJS
-export {
-  readWavFile,
-  parseWav,
-  processAudioData,
-};
+export { readWavFile, parseWav, processAudioData, ProcessorProgress };

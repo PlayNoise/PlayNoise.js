@@ -1,47 +1,37 @@
 // instrumentSelector.js
 
-import PN from '../pn.js';
-import { Instruments } from './instruments.js'; // Assuming you have an Instruments class defined
+import PN from "../pn.js";
+import { Instruments } from "./instruments.js"; // Assuming you have an Instruments class defined
 
 // Helper to select an instrument
 function instrument(instrumentName) {
   switch (instrumentName.toLowerCase()) {
-    case 'piano':
-      PN.currentInstrument = new Instruments().Piano();
-      break;
-    case 'organ':
-      PN.currentInstrument = new Instruments().Organ();
-      break;
-    case 'guitar':
-      PN.currentInstrument = new Instruments().Guitar();
-      break;
-    case 'bass':
-      PN.currentInstrument = new Instruments().Bass();
-      break;
-    case 'violin':
-      PN.currentInstrument = new Instruments().Violin();
-      break;
-    case 'trumpet':
+    case "trumpet":
       PN.currentInstrument = new Instruments().Trumpet();
       break;
-    case 'flute':
-      PN.currentInstrument = new Instruments().Flute();
+    case "thickbass":
+      PN.currentInstrument = new Instruments().ThickBass();
       break;
-    case 'drum':
-      PN.currentInstrument = new Instruments().Drum();
+    case "funcklead":
+      PN.currentInstrument = new Instruments().FunckLead();
       break;
-    case 'british':  
-      PN.currentInstrument = new Instruments().British();
+    case "organ60":
+      PN.currentInstrument = new Instruments().Organ60();
       break;
-    case 'xylophone':  
-      PN.currentInstrument = new Instruments().Xylophone();
+    case "banjo":
+      PN.currentInstrument = new Instruments().Banjo();
       break;
-
+    case "cello":
+      PN.currentInstrument = new Instruments().Cello();
+      break;
+    case "acousticguitar":
+      PN.currentInstrument = new Instruments().AcousticGuitar();
+      break;
     default:
-      console.log('Instrument not found!');
+      console.log("Instrument not found!");
       return;
   }
-  //console.log(`Selected instrument: ${instrumentName}`);
+  console.log(`Selected instrument: ${instrumentName}`);
 }
 
-export {instrument};
+export { instrument };

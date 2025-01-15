@@ -13,7 +13,7 @@ function difference(data) {
       difference = data[j] - data[j + tau];
       summation += difference * difference;
     }
-      results[tau] = summation;
+    results[tau] = summation;
   }
   return results;
 }
@@ -42,9 +42,9 @@ function absoluteThreshold(data, threshold) {
     if (x < threshold) {
       return i;
     }
-  if (x < k) {
-    k = x;
-    tau = i;
+    if (x < k) {
+      k = x;
+      tau = i;
     }
   }
   return tau;
@@ -104,5 +104,5 @@ export function yin(data, sampleRate, aThreshold = DEFAULT_THRESHOLD) {
   // Step 7: Calculate the chunk duration in seconds
   const duration = data.length / sampleRate;
 
-  return { frequency,  volume, duration };
+  return { frequency, volume, duration };
 }

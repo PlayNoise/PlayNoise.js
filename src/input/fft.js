@@ -19,7 +19,7 @@ function fft(data) {
 
   const results = new Array(n).fill(0).map(() => [0, 0]);
   for (let k = 0; k < n / 2; k++) {
-    const expTerm = -2 * Math.PI * k / n;
+    const expTerm = (-2 * Math.PI * k) / n;
     const cosine = Math.cos(expTerm);
     const sine = Math.sin(expTerm);
 
@@ -54,7 +54,7 @@ export function analyzeFrequencies(data, sampleRate) {
   const paddedData = padToPowerOfTwo(data);
 
   // Step 2: Convert padded data to complex format (real, imaginary) for FFT
-  const complexData = paddedData.map(value => [value, 0]);
+  const complexData = paddedData.map((value) => [value, 0]);
 
   // Step 3: Perform FFT on the complex data
   const fftData = fft(complexData);
@@ -63,7 +63,9 @@ export function analyzeFrequencies(data, sampleRate) {
   const magnitudes = computeMagnitudes(fftData);
 
   // Step 5: Calculate frequencies
-  const frequencies = magnitudes.map((_, index) => (index * sampleRate) / paddedData.length);
+  const frequencies = magnitudes.map(
+    (_, index) => (index * sampleRate) / paddedData.length,
+  );
 
   // Step 6: Find the frequency with the highest magnitude (dominant frequency)
   let maxIndex = 0;

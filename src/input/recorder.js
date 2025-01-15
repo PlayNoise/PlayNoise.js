@@ -4,9 +4,10 @@ let audioChunks = [];
 
 // Function to create WAV header using Uint8Array
 function writeWaveHeader(dataLength, sampleRate) {
-  const numChannels = 1, bitsPerSample = 16;
-  const byteRate = sampleRate * numChannels * bitsPerSample / 8;
-  const blockAlign = numChannels * bitsPerSample / 8;
+  const numChannels = 1,
+    bitsPerSample = 16;
+  const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
+  const blockAlign = (numChannels * bitsPerSample) / 8;
 
   // Uint8Array with a size of 44 bytes for the header
   const buffer = new Uint8Array(44);
@@ -20,7 +21,7 @@ function writeWaveHeader(dataLength, sampleRate) {
   // "fmt " sub-chunk
   buffer.set([102, 109, 116, 32], 12); // "fmt "
   view.setUint32(16, 16, true); // Subchunk1Size (16 for PCM)
-  view.setUint16(20, 1, true);  // AudioFormat (1 for PCM)
+  view.setUint16(20, 1, true); // AudioFormat (1 for PCM)
   view.setUint16(22, numChannels, true); // NumChannels
   view.setUint32(24, sampleRate, true); // SampleRate
   view.setUint32(28, byteRate, true); // ByteRate
@@ -61,12 +62,12 @@ function saveWavFile(audioBuffer, sampleRate, fileName) {
   wavFile.set(buffer, waveHeader.length);
 
   // Create a Blob from the WAV data
-  const blob = new Blob([wavFile], { type: 'audio/wav' });
+  const blob = new Blob([wavFile], { type: "audio/wav" });
 
   // Create a download link and trigger it
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = fileName + '.wav';
+  a.download = fileName + ".wav";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -76,7 +77,7 @@ function saveWavFile(audioBuffer, sampleRate, fileName) {
 
 // Function to handle recording and saving audio
 function startRecording(fileName) {
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const input = audioContext.createMediaStreamSource(stream);
 
@@ -93,11 +94,11 @@ function startRecording(fileName) {
       stop: () => {
         recorder.disconnect();
         input.disconnect();
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
 
         saveWavFile(audioChunks, audioContext.sampleRate, fileName);
         audioChunks = [];
-      }
+      },
     };
   });
 }

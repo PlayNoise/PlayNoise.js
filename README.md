@@ -43,7 +43,7 @@ Add PlayNoise.js to your project via a `<script>` tag.
         async function runPNExample() {
             console.log(PN);  // This should print the PN object
 
-            PN.instrument('Piano'); // Select the instrument
+            PN.instrument('Banjo'); // Select the instrument
             // PN.setVolume(0.5); // Set volume (optional)
 
             // Wait for PN.singVoice to complete

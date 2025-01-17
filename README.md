@@ -1,6 +1,7 @@
 # PlayNoise.js
 
-PlayNoise.js is a lightweight JavaScript library that enables music creation directly in the browser using Recorded Voices and YAML-based scores. It allows users to generate stereo audio and export it as WAV files, making it an excellent tool for web-based music and audio projects.
+PlayNoise.js is a lightweight JavaScript library that enables music creation directly in the browser using Recorded Speech and YAML-based scores. It allows users to generate stereo audio and export it as WAV files, making it an excellent tool for web-based music and audio projects.
+[Try it at  PlayNoise.org](https://playnoise.org/)
 
 ---
 

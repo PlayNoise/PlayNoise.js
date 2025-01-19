@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Play Song</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+
+    <script src="https://playnoise.org/pn-library.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Directly define the YAML content as a string
+      const yamlContent = `
+---
+name: Beauty and the Beast
+key: F
+length: 0.4
+instrument: banjo
+harmonic: first
+volume: 5000
+sections:
+  [
+    {
+      C1: [a4, c5, e5, 2:f5, 3:b4, a5, b5, g5, a5],
+      C2: [4:a3, b3, d4, f4, b4, 2:c5, 2:e4],
+    },
+    { C1: [4:a4-f5, 2:a4, 0.66:c5, 0.66:e5, 0.66:f5], C2: [f3, c3, g3, 5:a3] },
+    { C1: [4:b4-g5, a5, b5, g5, a5], C2: [f2, d3, f3, 3:b3, 2:e3] },
+    { C1: [4:a4-f5, f4, g4, a4, b4], C2: [f3, c3, g3, 5:a3] },
+    { C1: [4:e4-c5, 1.5:c5, 0.5:b4, 1.5:a4, 0.5:g4], C2: [a3, g3, f3, 5:g3] },
+    {
+      C1: [4:f4, 2:b4, 0.66:a4, 0.66:g4, 1.66:f4-d4, 5:c4, 2:c4-e4],
+      C2: [b2b, d3, f3, b3, 4:d3-b3, 2:c3, b2b, c3, 2:f3, 2:e3],
+    },
+  ]
+
+      `;
+
+      // Parse YAML content into JSON
+      const songData = jsyaml.load(yamlContent);
+      console.log(songData);
+
+      // Check if the PN library is loaded
+      if (typeof PN === "undefined") {
+        throw new Error("PN library is not loaded");
+      }
+
+      // Create and play the song
+      PN.instrument("banjo");
+      PN.setVolume(0.5); // Set volume level
+      const song = PN.createSong(songData); // Create a song from the input data
+      PN.save(song);
+    </script>
+  </body>
+</html>

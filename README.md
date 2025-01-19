@@ -74,6 +74,10 @@ Add PlayNoise.js to your project via a `<script>` tag.
     </script>
    ```
 
+## From YAML to Audio File - Beauty and the Beast 
+
+Here's the CodePen project: https://codepen.io/isles-forcha/pen/KwPBJZO
+
 2. Open the HTML file in your browser, and the WAV file will be generated and available for download.
 
 ---

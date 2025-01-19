@@ -32,6 +32,10 @@ Add PlayNoise.js to your project via a `<script>` tag.
    ```html
    <script type="module" src="path/to/pn-library.js"></script>
    ```
+   Load from remote storage
+   ```html
+   <script t src="https://playnoise.org/pn-library.js"></script>
+   ```
 
 ---
 
@@ -81,6 +85,7 @@ Add PlayNoise.js to your project via a `<script>` tag.
 - `lint-fix`: Automatically fixes code style issues.
 - `test`: Runs unit tests using Jest.
 - `docs`: Generates documentation using JSDoc.
+- `format` : Format linters and maintain code style
 
 Run these scripts using npm:
 

@@ -140,9 +140,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-## Author
-
-Developed by **Forcha Pearl Fri**.
 
 Feel free to open an issue or submit a pull request if you have any questions or suggestions!
 

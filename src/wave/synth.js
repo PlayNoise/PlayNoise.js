@@ -118,6 +118,83 @@ export function noteData(
   return data;
 }
 
+// Returns the note data based on frequency, duration, envelope, harmonic, and volume
+export function noteData3(
+  frequency,
+  duration,
+  envelope,
+  harmonic1,
+  harmonic2,
+  step,
+  filter,
+  filter2,
+  width1,
+  width2,
+  filterEnv,
+  lfoWave,
+  glideTime,
+  volume,
+  multiplier,
+  noiseLevel,
+  noiseState,
+  ratio,
+) {
+  const sampleRate = 44100; // Assuming a standard sample rate
+  const maxLength = Math.ceil(duration * sampleRate * multiplier);
+  let filterState = { value: 0, resonanceGain: 0 }; // Initial filter state
+
+  const data = [];
+
+  for (let i = 0; i < maxLength; i++) {
+    const time = i / sampleRate;
+
+    if (time >= duration) {
+      break;
+    }
+
+    let frequency2 = semitone(frequency, step);
+    frequency = applyGlide(frequency, frequency, glideTime, 1 / sampleRate);
+    frequency2 = applyGlide(frequency2, frequency2, glideTime, 1 / sampleRate);
+
+    let oscillator1 = 0,
+      oscillator2 = 0;
+    if (harmonic1 === pulseWave) {
+      oscillator1 = harmonic1(frequency, time, width1);
+    } else {
+      oscillator1 = harmonic1(frequency * time);
+    }
+
+    if (harmonic2 === pulseWave) {
+      oscillator2 = harmonic2(frequency, time, width2);
+    } else {
+      oscillator2 = harmonic2(frequency2 * time);
+    }
+
+    // Mix the oscillators
+    let sample =
+      mixing(oscillator1, oscillator2, ratio[0], ratio[1], ratio[2]) +
+      noiseLevel * whiteNoise(noiseState);
+
+    // Apply LFO for vibrato
+    sample *= 1 + lfoWave(time);
+
+    const amplitude = filterEnv(time);
+
+    // Apply amplitude envelope to the cutoff frequency
+    sample = filter(sample, amplitude, sampleRate, filterState);
+    sample = filter2(sample, amplitude, sampleRate, filterState);
+
+    const amp = envelope(time, duration);
+
+    sample *= amp;
+
+    // Scale by volume and store in the data array
+    data.push(sample * volume);
+  }
+
+  return data;
+}
+
 function frequencyScale(step) {
   return 440.0 * Math.pow(2, step / 12.0);
 }

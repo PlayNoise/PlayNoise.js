@@ -1,6 +1,7 @@
 import {
   rest,
   noteData,
+  noteData3,
   concat,
   frequency,
   inKey,
@@ -80,6 +81,38 @@ class Note {
       const frequencyValue = adjustedPitch;
 
       return noteData(
+        frequencyValue,
+        this.length,
+        this.env,
+        this.har1,
+        this.har2,
+        this.step,
+        this.fil,
+        this.fil2,
+        this.width1,
+        this.width2,
+        this.filEnv,
+        this.lfoWave,
+        this.glideTime,
+        this.vol,
+        this.multi,
+        this.noiseL,
+        this.noiseS,
+        this.ratio,
+      );
+    });
+    return concatNotes(...noteDataArray);
+  }
+  encodeNote3() {
+    if (this.pitch.length === 0) {
+      return rest(this.length); // Handle rest
+    }
+
+    const noteDataArray = this.pitch.map((p, i) => {
+      const adjustedPitch = p + (this.accidental[i] || 0);
+      const frequencyValue = adjustedPitch;
+
+      return noteData3(
         frequencyValue,
         this.length,
         this.env,
@@ -222,7 +255,7 @@ class Tune {
       const note = this.ch1[i];
       console.log(`Note ch1 ${JSON.stringify(note)}`);
 
-      let encoded = note.encodeNote();
+      let encoded = note.encodeNote3();
       ch1Data.push(encoded);
       console.log(encoded);
     }
@@ -231,7 +264,7 @@ class Tune {
       const note = this.ch2[i];
       console.log(`Note ch2 ${JSON.stringify(note)}`);
 
-      let encoded = note.encodeNote();
+      let encoded = note.encodeNote3();
       ch2Data.push(encoded);
     }
 

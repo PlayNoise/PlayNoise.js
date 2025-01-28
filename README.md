@@ -123,6 +123,10 @@ Contributions are welcome! Here’s how you can contribute:
 
 ---
 
+##Chats
+
+Join the PlayNoise Discord Community https://discord.gg/g9ERs8jJ
+
 ## Dependencies
 
 PlayNoise.js relies on modern browser APIs and lightweight libraries to handle core functionality:

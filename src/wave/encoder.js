@@ -1,7 +1,6 @@
 import {
   rest,
   noteData,
-  noteData3,
   concat,
   frequency,
   inKey,
@@ -112,7 +111,7 @@ class Note {
       const adjustedPitch = p + (this.accidental[i] || 0);
       const frequencyValue = adjustedPitch;
 
-      return noteData3(
+      return noteData(
         frequencyValue,
         this.length,
         this.env,

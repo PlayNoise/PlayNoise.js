@@ -138,6 +138,11 @@ PlayNoise.js relies on modern browser APIs and lightweight libraries to handle c
 
 ---
 
+## Contributors
+
+
+
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

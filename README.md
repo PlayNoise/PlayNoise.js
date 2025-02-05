@@ -1,6 +1,6 @@
 # PlayNoise.js
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 PlayNoise.js is a lightweight JavaScript library that enables music creation directly in the browser using Recorded Speech and YAML-based scores. It allows users to generate stereo audio and export it as WAV files, making it an excellent tool for web-based music and audio projects.
@@ -151,6 +151,7 @@ PlayNoise.js relies on modern browser APIs and lightweight libraries to handle c
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/forcha-pearl/"><img src="https://avatars.githubusercontent.com/u/24577149?v=4?s=100" width="100px;" alt="FORCHA PEARL"/><br /><sub><b>FORCHA PEARL</b></sub></a><br /><a href="https://github.com/PlayNoise/PlayNoise.js/commits?author=Forchapeatl" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MananPoojara"><img src="https://avatars.githubusercontent.com/u/104253184?v=4?s=100" width="100px;" alt="Manan"/><br /><sub><b>Manan</b></sub></a><br /><a href="https://github.com/PlayNoise/PlayNoise.js/commits?author=MananPoojara" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

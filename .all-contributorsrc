@@ -33,6 +33,15 @@
       "contributions": [
         "test"
       ]
+    },
+    {
+      "login": "TildaDares",
+      "name": "Tilda Udufo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63427719?v=4",
+      "profile": "https://github.com/TildaDares",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

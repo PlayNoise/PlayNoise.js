@@ -2,7 +2,7 @@
 
 # PlayNoise.js
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 PlayNoise.js is a lightweight JavaScript library that enables music creation directly in the browser using Recorded Speech and YAML-based scores. It allows users to generate stereo audio and export it as WAV files, making it an excellent tool for web-based music and audio projects.
@@ -166,6 +166,7 @@ PlayNoise.js relies on modern browser APIs and lightweight libraries to handle c
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MananPoojara"><img src="https://avatars.githubusercontent.com/u/104253184?v=4?s=100" width="100px;" alt="Manan"/><br /><sub><b>Manan</b></sub></a><br /><a href="https://github.com/PlayNoise/PlayNoise.js/commits?author=MananPoojara" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/BitmapJunior"><img src="https://avatars.githubusercontent.com/u/197013751?v=4?s=100" width="100px;" alt="bjunior"/><br /><sub><b>bjunior</b></sub></a><br /><a href="https://github.com/PlayNoise/PlayNoise.js/commits?author=BitmapJunior" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TildaDares"><img src="https://avatars.githubusercontent.com/u/63427719?v=4?s=100" width="100px;" alt="Tilda Udufo"/><br /><sub><b>Tilda Udufo</b></sub></a><br /><a href="https://github.com/PlayNoise/PlayNoise.js/commits?author=TildaDares" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/gudangupta"><img src="https://avatars.githubusercontent.com/u/197318468?v=4?s=100" width="100px;" alt="gudangupta"/><br /><sub><b>gudangupta</b></sub></a><br /><a href="https://github.com/PlayNoise/PlayNoise.js/commits?author=gudangupta" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

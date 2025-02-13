@@ -114,6 +114,16 @@ This will output documentation in the `docs/` directory.
 
 ---
 
+## 🐛 Reporting Bugs
+
+If you find a bug in PlayNoise.js, please open an issue in our **GitHub Issues Tracker**:
+
+👉 [Report a Bug](https://github.com/PlayNoise/PlayNoise.js/issues/new?template=bug_report.md)
+
+Please follow the bug report template to help us diagnose and fix the issue faster.
+
+----
+
 ## Contributing
 
 Contributions are welcome! Here’s how you can contribute:
